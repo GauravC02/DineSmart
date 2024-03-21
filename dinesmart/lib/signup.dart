@@ -1,3 +1,5 @@
+// signup.dart
+
 import 'package:flutter/material.dart';
 import 'login.dart';
 
@@ -71,9 +73,6 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Signup Page'),
-      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -106,6 +105,15 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Text(
+                  'Signup Page',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 20.0),
                 Container(
                   margin: EdgeInsets.only(bottom: 10.0),
                   child: Image.asset('assets/logo.png', width: 200.0),
@@ -116,14 +124,14 @@ class _SignupPageState extends State<SignupPage> {
                     labelText: 'Email',
                   ),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 5.0),
                 TextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
                     labelText: 'Username',
                   ),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 5.0),
                 TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -131,7 +139,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   obscureText: true,
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 5.0),
                 TextField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -139,12 +147,12 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   obscureText: true,
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 ElevatedButton(
                   onPressed: _signup,
                   child: Text('Sign up'),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 GestureDetector(
                   onTap: _navigateToLogin,
                   child: Text(

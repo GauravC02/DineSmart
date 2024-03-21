@@ -1,3 +1,5 @@
+// login.dart
+
 import 'package:flutter/material.dart';
 import 'signup.dart';
 
@@ -45,9 +47,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -80,6 +79,15 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Text(
+                  'Login Page',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 20.0),
                 Container(
                   margin: EdgeInsets.only(bottom: 20.0),
                   child: Image.asset('assets/logo.png', width: 200.0),
