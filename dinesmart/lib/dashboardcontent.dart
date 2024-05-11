@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'restaurantdine.dart'; // Import the RestaurantDinePage
 
 class DashboardContent extends StatelessWidget {
   @override
@@ -7,15 +8,25 @@ class DashboardContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: Container(
-            color: Colors.blue,
-            alignment: Alignment.center,
-            child: Text(
-              'DINE',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        RestaurantDinePage()), // Navigate to RestaurantDinePage
+              );
+            },
+            child: Container(
+              color: Colors.blue,
+              alignment: Alignment.center,
+              child: Text(
+                'DINE',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

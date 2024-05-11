@@ -76,7 +76,7 @@ class _SignupPageState extends State<SignupPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.deepOrange, Colors.orange],
+            colors: [Colors.lightBlue, Colors.blue], // Adjusted colors
           ),
         ),
         child: Center(
@@ -87,7 +87,10 @@ class _SignupPageState extends State<SignupPage> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
+                colors: [
+                  Colors.blueAccent,
+                  Colors.lightBlueAccent
+                ], // Adjusted colors
               ),
               borderRadius: BorderRadius.circular(20.0),
               boxShadow: [
