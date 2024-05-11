@@ -1,5 +1,3 @@
-// login.dart
-
 import 'package:flutter/material.dart';
 import 'signup.dart';
 
@@ -58,7 +56,6 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: Container(
             width: 300.0,
-            height: 600.0,
             padding: EdgeInsets.all(20.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -88,10 +85,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 20.0),
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: Image.asset('assets/logo.png', width: 200.0),
-                ),
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(

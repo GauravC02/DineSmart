@@ -37,15 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               'assets/logo.png',
-              width: 200.0,
-              height: 200.0,
+              width: 400.0, // Increased width
+              height: 400.0, // Increased height
             ),
             SizedBox(height: 20.0),
             AnimatedOpacity(
               opacity: _visible ? 1.0 : 0.0,
               duration: Duration(milliseconds: 1000),
               child: Text(
-                'DINE SMART',
+                '', // Empty string instead of 'DINE SMART' text
                 style: TextStyle(
                   fontSize: 40.0, // Increased font size
                   fontWeight: FontWeight.bold,
