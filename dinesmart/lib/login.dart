@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'signup.dart';
+import 'dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +16,13 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      print('Email: $email, Password: $password, Remember Me: $_rememberMe');
+      // Perform your login logic here
+
+      // After successful login, navigate to the dashboard
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+      );
     } else {
       showDialog(
         context: context,
@@ -55,8 +61,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: Center(
           child: Container(
-            width: 300.0,
-            padding: EdgeInsets.all(20.0),
+            width: 300.0, // Adjusted width
+            padding: EdgeInsets.all(20.0), // Adjusted padding
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
