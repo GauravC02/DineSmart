@@ -33,7 +33,7 @@ class DashboardContent extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            color: Colors.green,
+            color: Colors.purple,
             alignment: Alignment.center,
             child: Text(
               'Delivery',
