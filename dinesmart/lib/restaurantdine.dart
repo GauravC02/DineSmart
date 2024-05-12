@@ -2,8 +2,21 @@ import 'package:flutter/material.dart';
 
 class RestaurantDinePage extends StatelessWidget {
   final List<Restaurant> restaurants = [
-    Restaurant(name: 'Restaurant 1', logo: 'assets/restaurant1_logo.png'),
-    Restaurant(name: 'Restaurant 2', logo: 'assets/restaurant2_logo.png'),
+    Restaurant(name: 'KFC', logo: 'assets/kfc.png', location: 'Kathmandu'),
+    Restaurant(
+        name: 'Pizza Hut',
+        logo: 'assets/pizzahut.png',
+        location: 'Durbar Marg'),
+    Restaurant(
+        name: 'McDonalds', logo: 'assets/mcdonalds.png', location: 'Nepal'),
+    Restaurant(
+        name: 'Burger King',
+        logo: 'assets/burgerking.png',
+        location: 'America'),
+    Restaurant(
+        name: 'Starbucks',
+        logo: 'assets/starbucks.png',
+        location: 'United States of America'),
     // Add more restaurant objects as needed
   ];
 
@@ -34,7 +47,18 @@ class RestaurantDinePage extends StatelessWidget {
             child: ListView.builder(
               itemCount: restaurants.length,
               itemBuilder: (context, index) {
-                return RestaurantItem(restaurant: restaurants[index]);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RestaurantProfilePage(
+                            restaurant: restaurants[index]),
+                      ),
+                    );
+                  },
+                  child: RestaurantItem(restaurant: restaurants[index]),
+                );
               },
             ),
           ),
@@ -47,8 +71,9 @@ class RestaurantDinePage extends StatelessWidget {
 class Restaurant {
   final String name;
   final String logo;
+  final String location;
 
-  Restaurant({required this.name, required this.logo});
+  Restaurant({required this.name, required this.logo, required this.location});
 }
 
 class RestaurantItem extends StatelessWidget {
@@ -66,7 +91,7 @@ class RestaurantItem extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: const Color.fromARGB(255, 255, 255, 255),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
@@ -91,7 +116,7 @@ class RestaurantItem extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                'Location: Kathmandu',
+                'Location: ${restaurant.location}',
                 style: TextStyle(
                   fontSize: 14,
                 ),
@@ -99,6 +124,30 @@ class RestaurantItem extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class RestaurantProfilePage extends StatelessWidget {
+  final Restaurant restaurant;
+
+  RestaurantProfilePage({required this.restaurant});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(restaurant.name),
+      ),
+      body: Center(
+        child: Text(
+          'Profile page for ${restaurant.name}',
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
