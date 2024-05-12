@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
 
-class RestaurantDinePage extends StatelessWidget {
-  final List<Restaurant> restaurants = [
+class RestaurantDinePage extends StatefulWidget {
+  @override
+  _RestaurantDinePageState createState() => _RestaurantDinePageState();
+}
+
+class _RestaurantDinePageState extends State<RestaurantDinePage> {
+  final List<Restaurant> _allRestaurants = [
     Restaurant(name: 'KFC', logo: 'assets/kfc.png', location: 'Kathmandu'),
     Restaurant(
-        name: 'Pizza Hut',
-        logo: 'assets/pizzahut.png',
-        location: 'Durbar Marg'),
+        name: 'Pizza Hut', logo: 'assets/pizzahut.png', location: 'Lalitpur'),
     Restaurant(
-        name: 'McDonalds', logo: 'assets/mcdonalds.png', location: 'Nepal'),
+        name: 'McDonalds', logo: 'assets/mcdonalds.png', location: 'Bhaktapur'),
     Restaurant(
         name: 'Burger King',
         logo: 'assets/burgerking.png',
-        location: 'America'),
+        location: 'Dhulikhel'),
     Restaurant(
-        name: 'Starbucks',
-        logo: 'assets/starbucks.png',
-        location: 'United States of America'),
+        name: 'Starbucks', logo: 'assets/starbucks.png', location: 'Pokhara'),
     // Add more restaurant objects as needed
   ];
+
+  late List<Restaurant> _filteredRestaurants;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredRestaurants = _allRestaurants;
+  }
+
+  void _filterRestaurants(String query) {
+    setState(() {
+      _filteredRestaurants = _allRestaurants
+          .where((restaurant) =>
+              restaurant.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +51,7 @@ class RestaurantDinePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                onChanged: _filterRestaurants,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(Icons.search),
@@ -45,7 +64,7 @@ class RestaurantDinePage extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: restaurants.length,
+              itemCount: _filteredRestaurants.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -53,11 +72,12 @@ class RestaurantDinePage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => RestaurantProfilePage(
-                            restaurant: restaurants[index]),
+                            restaurant: _filteredRestaurants[index]),
                       ),
                     );
                   },
-                  child: RestaurantItem(restaurant: restaurants[index]),
+                  child:
+                      RestaurantItem(restaurant: _filteredRestaurants[index]),
                 );
               },
             ),
