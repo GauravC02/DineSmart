@@ -7,17 +7,31 @@ class RestaurantDinePage extends StatefulWidget {
 
 class _RestaurantDinePageState extends State<RestaurantDinePage> {
   final List<Restaurant> _allRestaurants = [
-    Restaurant(name: 'KFC', logo: 'assets/kfc.png', location: 'Kathmandu'),
     Restaurant(
-        name: 'Pizza Hut', logo: 'assets/pizzahut.png', location: 'Lalitpur'),
+        name: 'KFC',
+        logo: 'assets/kfc.png',
+        location: 'Kathmandu',
+        coverImage: 'assets/kfccover.png'),
     Restaurant(
-        name: 'McDonalds', logo: 'assets/mcdonalds.png', location: 'Bhaktapur'),
+        name: 'Pizza Hut',
+        logo: 'assets/pizzahut.png',
+        location: 'Lalitpur',
+        coverImage: 'assets/pizzahutcover.png'),
+    Restaurant(
+        name: 'McDonalds',
+        logo: 'assets/mcdonalds.png',
+        location: 'Bhaktapur',
+        coverImage: 'assets/mcdonaldscover.png'),
     Restaurant(
         name: 'Burger King',
         logo: 'assets/burgerking.png',
-        location: 'Dhulikhel'),
+        location: 'Dhulikhel',
+        coverImage: 'assets/burgerkingcover.png'),
     Restaurant(
-        name: 'Starbucks', logo: 'assets/starbucks.png', location: 'Pokhara'),
+        name: 'Starbucks',
+        logo: 'assets/starbucks.png',
+        location: 'Pokhara',
+        coverImage: 'assets/starbuckscover.png'),
     // Add more restaurant objects as needed
   ];
 
@@ -93,8 +107,13 @@ class Restaurant {
   final String name;
   final String logo;
   final String location;
+  final String coverImage;
 
-  Restaurant({required this.name, required this.logo, required this.location});
+  Restaurant(
+      {required this.name,
+      required this.logo,
+      required this.location,
+      required this.coverImage});
 }
 
 class RestaurantItem extends StatelessWidget {
@@ -165,12 +184,33 @@ class RestaurantProfilePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 20),
-          Image.asset(
-            restaurant.logo,
-            width: 100,
-            height: 100,
+          // Cover Image with Logo
+          Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200, // Adjust height as needed
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(restaurant.coverImage),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              ClipOval(
+                child: Container(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  child: Image.asset(
+                    restaurant.logo,
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Text(
             restaurant.name,
             style: TextStyle(
