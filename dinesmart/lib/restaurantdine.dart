@@ -72,7 +72,8 @@ class _RestaurantDinePageState extends State<RestaurantDinePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => RestaurantProfilePage(
-                            restaurant: _filteredRestaurants[index]),
+                          restaurant: _filteredRestaurants[index],
+                        ),
                       ),
                     );
                   },
@@ -160,11 +161,61 @@ class RestaurantProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(restaurant.name),
       ),
-      body: Center(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 20),
+          Image.asset(
+            restaurant.logo,
+            width: 100,
+            height: 100,
+          ),
+          SizedBox(height: 10),
+          Text(
+            restaurant.name,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                CategoryItem(category: 'Snacks'),
+                CategoryItem(category: 'Drinks'),
+                CategoryItem(category: 'Dinner'),
+                CategoryItem(category: 'Breakfast'),
+                CategoryItem(category: 'Dessert'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CategoryItem extends StatelessWidget {
+  final String category;
+
+  CategoryItem({required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Text(
-          'Profile page for ${restaurant.name}',
+          category,
           style: TextStyle(
-            fontSize: 24.0,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
