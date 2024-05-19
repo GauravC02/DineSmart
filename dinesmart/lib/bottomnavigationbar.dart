@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'qrscanner.dart'; // Import the QR scanner page
 import 'dashboard.dart'; // Import the DashboardPage
+import 'cart.dart'; // Import the CartPage
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -51,6 +52,12 @@ class BottomNavigationBarWidget extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => QRScannerPage()),
+          );
+        } else if (index == 4) {
+          // If the Cart button is tapped, navigate to the CartPage
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartPage()),
           );
         } else {
           // Call the onItemTapped function for other items
