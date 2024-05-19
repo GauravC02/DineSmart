@@ -42,7 +42,9 @@ class _DashboardPageState extends State<DashboardPage> {
             icon: Icon(Icons.search), // Search icon
             onPressed: () {
               showSearch(
-                  context: context, delegate: RestaurantSearchDelegate());
+                context: context,
+                delegate: RestaurantSearchDelegate(),
+              );
             },
           ),
         ],
@@ -166,54 +168,9 @@ class _DashboardPageState extends State<DashboardPage> {
             height: 150.0, // Adjust height as needed
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: [
-                _buildRestaurantCard(
-                    context,
-                    'KFC',
-                    'assets/kfc.png',
-                    Restaurant(
-                        name: 'KFC',
-                        logo: 'assets/kfc.png',
-                        location: 'Kathmandu',
-                        coverImage: 'assets/kfccover.png')),
-                _buildRestaurantCard(
-                    context,
-                    'Pizza Hut',
-                    'assets/pizzahut.png',
-                    Restaurant(
-                        name: 'Pizza Hut',
-                        logo: 'assets/pizzahut.png',
-                        location: 'Lalitpur',
-                        coverImage: 'assets/pizzahutcover.png')),
-                _buildRestaurantCard(
-                    context,
-                    'McDonalds',
-                    'assets/mcdonalds.png',
-                    Restaurant(
-                        name: 'McDonalds',
-                        logo: 'assets/mcdonalds.png',
-                        location: 'Bhaktapur',
-                        coverImage: 'assets/mcdonaldscover.png')),
-                _buildRestaurantCard(
-                    context,
-                    'Burger King',
-                    'assets/burgerking.png',
-                    Restaurant(
-                        name: 'Burger King',
-                        logo: 'assets/burgerking.png',
-                        location: 'Dhulikhel',
-                        coverImage: 'assets/burgerkingcover.png')),
-                _buildRestaurantCard(
-                    context,
-                    'Starbucks',
-                    'assets/starbucks.png',
-                    Restaurant(
-                        name: 'Starbucks',
-                        logo: 'assets/starbucks.png',
-                        location: 'Pokhara',
-                        coverImage: 'assets/starbuckscover.png')),
-                // Add more restaurants as needed
-              ],
+              children: allRestaurants.map((restaurant) {
+                return _buildRestaurantCard(context, restaurant);
+              }).toList(),
             ),
           ),
           Expanded(
@@ -274,8 +231,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildRestaurantCard(
-      BuildContext context, String name, String logo, Restaurant restaurant) {
+  Widget _buildRestaurantCard(BuildContext context, Restaurant restaurant) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -299,7 +255,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               child: Center(
                 child: Image.asset(
-                  logo,
+                  restaurant.logo,
                   width: 80,
                   height: 80,
                   fit: BoxFit.contain,
@@ -308,7 +264,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             SizedBox(height: 5),
             Text(
-              name,
+              restaurant.name,
               style: TextStyle(
                 fontSize: 14,
               ),
