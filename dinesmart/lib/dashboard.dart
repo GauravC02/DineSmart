@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'login.dart'; // Import your login page file
-import 'dashboardcontent.dart';
 import 'restaurantdine.dart';
+
+class DashboardContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
 
 class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DashboardAppBar(
-        onLogoutPressed: () {
-          // Call the logout function
-          _logout(context);
-        },
+      appBar: AppBar(
+        title: Text(''), // Empty title
+        automaticallyImplyLeading: false, // Remove default back button
+        leading: IconButton(
+          icon: Icon(Icons.person), // User icon
+          onPressed: () {
+            // Handle user icon tap
+            // You can implement any desired functionality here
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search), // Search icon
+            onPressed: () {
+              showSearch(
+                  context: context, delegate: RestaurantSearchDelegate());
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,15 +109,6 @@ class DashboardPage extends StatelessWidget {
                   'Categories',
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
-                TextButton(
-                  onPressed: () {
-                    // Handle view more categories
-                  },
-                  child: Text(
-                    'View More',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
               ],
             ),
           ),
@@ -126,20 +137,6 @@ class DashboardPage extends StatelessWidget {
                 Text(
                   'Restaurants',
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RestaurantDinePage(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'View More',
-                    style: TextStyle(color: Colors.blue),
-                  ),
                 ),
               ],
             ),
@@ -274,46 +271,50 @@ class DashboardPage extends StatelessWidget {
       ),
     );
   }
-
-  void _logout(BuildContext context) {
-    // Use Navigator to pop the DashboardPage and return to the LoginPage
-    Navigator.pop(context);
-  }
 }
 
-class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback onLogoutPressed;
-
-  const DashboardAppBar({required this.onLogoutPressed});
-
+class RestaurantSearchDelegate extends SearchDelegate<String> {
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(''), // Empty title
-      automaticallyImplyLeading: false, // Remove default back button
-      leading: IconButton(
-        icon: Icon(Icons.person), // Use user icon
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
         onPressed: () {
-          // Handle user icon tap
-          // You can implement any desired functionality here
+          query = '';
         },
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.logout),
-          onPressed: onLogoutPressed,
-        ),
-      ],
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
     );
   }
-}
 
-class DashboardContent extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(); // Return an empty Container
+  Widget buildResults(BuildContext context) {
+    // Implement your search logic here
+    // Return the search results widget
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: Text(
+          'Search Results for: $query',
+          style: TextStyle(fontSize: 20.0),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // Implement your search suggestions logic here
+    // Return the search suggestions widget
+    return Container();
   }
 }
