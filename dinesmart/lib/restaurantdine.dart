@@ -43,61 +43,31 @@ class _RestaurantDinePageState extends State<RestaurantDinePage> {
     _filteredRestaurants = _allRestaurants;
   }
 
-  void _filterRestaurants(String query) {
-    setState(() {
-      _filteredRestaurants = _allRestaurants
-          .where((restaurant) =>
-              restaurant.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Restaurants'),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.grey[200],
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onChanged: _filterRestaurants,
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+      body: Expanded(
+        child: ListView.builder(
+          itemCount: _filteredRestaurants.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RestaurantProfilePage(
+                      restaurant: _filteredRestaurants[index],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredRestaurants.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RestaurantProfilePage(
-                          restaurant: _filteredRestaurants[index],
-                        ),
-                      ),
-                    );
-                  },
-                  child:
-                      RestaurantItem(restaurant: _filteredRestaurants[index]),
                 );
               },
-            ),
-          ),
-        ],
+              child: RestaurantItem(restaurant: _filteredRestaurants[index]),
+            );
+          },
+        ),
       ),
     );
   }

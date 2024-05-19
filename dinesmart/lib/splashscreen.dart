@@ -1,7 +1,7 @@
-import 'package:dinesmart/signup.dart';
+import 'package:dinesmart/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'signup.dart'; // Import your homepage file
+import 'dashboard.dart'; // Import your homepage file
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 6), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SignupPage()),
+        MaterialPageRoute(builder: (context) => DashboardPage()),
       );
     });
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // Import your login page file
+import 'login.dart';
+import 'signup.dart';
 import 'restaurantdine.dart';
 
 class DashboardContent extends StatelessWidget {
@@ -9,7 +10,20 @@ class DashboardContent extends StatelessWidget {
   }
 }
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
+  @override
+  _DashboardPageState createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +60,10 @@ class DashboardPage extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {
                         // Handle login button press
-                        // Navigate to login page or perform any desired action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
                       },
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(
@@ -67,7 +84,10 @@ class DashboardPage extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {
                         // Handle signup button press
-                        // Navigate to signup page or perform any desired action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignupPage()),
+                        );
                       },
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(
@@ -200,6 +220,33 @@ class DashboardPage extends StatelessWidget {
             child: DashboardContent(),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.blue),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite, color: Colors.blue),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code, color: Colors.blue),
+            label: 'QR Code',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history, color: Colors.blue),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart, color: Colors.blue),
+            label: 'Cart',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),
     );
   }
