@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'qrscanner.dart'; // Import the QR scanner page
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -24,7 +25,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.qr_code, color: Colors.blue),
-          label: 'QR Code',
+          label: 'QR Scanner',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.history, color: Colors.blue),
@@ -37,7 +38,18 @@ class BottomNavigationBarWidget extends StatelessWidget {
       ],
       currentIndex: selectedIndex,
       selectedItemColor: Colors.blue,
-      onTap: onItemTapped,
+      onTap: (index) {
+        if (index == 2) {
+          // If the QR Code item is tapped, navigate to the QR scanner page
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => QRScannerPage()),
+          );
+        } else {
+          // Call the onItemTapped function for other items
+          onItemTapped(index);
+        }
+      },
     );
   }
 }
