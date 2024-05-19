@@ -71,6 +71,9 @@ flutter:
      - assets/starbuckscover.png
      - assets/mcdonaldscover.png
      - assets/burgerkingcover.png
+     - assets/kfcoffer.png
+     - assets/pizzahutoffer.png
+     - assets/burgerkingoffer.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
