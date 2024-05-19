@@ -12,7 +12,8 @@ class LoginSignupApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login/Signup Page',
+      debugShowCheckedModeBanner: false,
+      title: 'Dine-Smart',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
