@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'signup.dart';
 import 'restaurantdine.dart';
+import 'bottomnavigationbar.dart'; // Import the bottomnavigationbar.dart file
 
 class DashboardContent extends StatelessWidget {
   @override
@@ -178,32 +179,10 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.blue),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite, color: Colors.blue),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code, color: Colors.blue),
-            label: 'QR Code',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history, color: Colors.blue),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart, color: Colors.blue),
-            label: 'Cart',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
+      bottomNavigationBar: BottomNavigationBarWidget(
+        // Use the BottomNavigationBarWidget here
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
