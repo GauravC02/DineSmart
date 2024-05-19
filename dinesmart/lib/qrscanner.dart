@@ -29,8 +29,8 @@ class _QRScannerPageState extends State<QRScannerPage>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      vsync: this, // Added vsync parameter here
-      duration: Duration(seconds: 2),
+      vsync: this,
+      duration: Duration(seconds: 2), // Adjust animation speed
     )..repeat(reverse: true);
   }
 
@@ -54,9 +54,17 @@ class _QRScannerPageState extends State<QRScannerPage>
             onQRViewCreated: _onQRViewCreated,
           ),
           Center(
-            child: CustomPaint(
-              size: Size(250, 250),
-              painter: QRFramePainter(animation: _animationController),
+            child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return CustomPaint(
+                  size: Size(250, 250),
+                  painter: QRFramePainter(
+                    animation: _animationController,
+                    cornerSize: 20,
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -81,8 +89,9 @@ class _QRScannerPageState extends State<QRScannerPage>
 
 class QRFramePainter extends CustomPainter {
   final Animation<double> animation;
+  final double cornerSize;
 
-  QRFramePainter({required this.animation});
+  QRFramePainter({required this.animation, required this.cornerSize});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -90,8 +99,6 @@ class QRFramePainter extends CustomPainter {
       ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
-
-    final double cornerSize = 20;
 
     final Path path = Path()
       ..moveTo(0, cornerSize)
@@ -111,15 +118,16 @@ class QRFramePainter extends CustomPainter {
 
     final double lineHeight = size.width * 0.2; // Adjust as needed
     final double gapHeight = size.width * 0.1; // Adjust as needed
-    final double totalHeight = lineHeight + gapHeight;
-    final double progress = animation.value * totalHeight;
+    final double totalHeight = size.height - (2 * cornerSize);
+    final double animationValue = animation.value;
+    final double progress = totalHeight * animationValue;
 
     final Path scanLinePath = Path()
-      ..moveTo(0, progress)
-      ..lineTo(size.width, progress);
+      ..moveTo(cornerSize, cornerSize + progress)
+      ..lineTo(size.width - cornerSize, cornerSize + progress);
 
     final Paint scanLinePaint = Paint()
-      ..color = Colors.green // Adjust scan line color as needed
+      ..color = Colors.red // Adjust scan line color as needed
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
@@ -128,6 +136,6 @@ class QRFramePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }

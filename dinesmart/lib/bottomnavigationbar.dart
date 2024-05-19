@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'qrscanner.dart'; // Import the QR scanner page
+import 'dashboard.dart'; // Import the DashboardPage
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -39,7 +40,13 @@ class BottomNavigationBarWidget extends StatelessWidget {
       currentIndex: selectedIndex,
       selectedItemColor: Colors.blue,
       onTap: (index) {
-        if (index == 2) {
+        if (index == 0) {
+          // If the Home button is tapped, navigate to the DashboardPage
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DashboardPage()),
+          );
+        } else if (index == 2) {
           // If the QR Code item is tapped, navigate to the QR scanner page
           Navigator.push(
             context,
