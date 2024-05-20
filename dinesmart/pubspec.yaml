@@ -74,6 +74,11 @@ flutter:
      - assets/kfcoffer.png
      - assets/pizzahutoffer.png
      - assets/burgerkingoffer.png
+     - assets/breakfast.png
+     - assets/snack.png
+     - assets/dinner.png
+     - assets/drink.png
+     - assets/dessert.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -137,15 +137,15 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           SizedBox(height: 8.0), // Add space below categories title
           Container(
-            height: 100.0, // Adjust height as needed
+            height: 141.0, // Match the height to the ListView of restaurants
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                _buildCategoryBox('Breakfast'),
-                _buildCategoryBox('Snacks'),
-                _buildCategoryBox('Dinner'),
-                _buildCategoryBox('Desserts'),
-                _buildCategoryBox('Drinks'),
+                _buildCategoryBox('Breakfast', 'assets/breakfast.png'),
+                _buildCategoryBox('Snacks', 'assets/snack.png'),
+                _buildCategoryBox('Dinner', 'assets/dinner.png'),
+                _buildCategoryBox('Desserts', 'assets/dessert.png'),
+                _buildCategoryBox('Drinks', 'assets/drink.png'),
                 // Add more categories as needed
               ],
             ),
@@ -166,7 +166,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           SizedBox(height: 8.0), // Add space below restaurants title
           Container(
-            height: 150.0, // Adjust height as needed
+            height: 141.0, // Adjust height as needed
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: allRestaurants.map((restaurant) {
@@ -197,16 +197,27 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildCategoryBox(String category) {
-    return Container(
-      width: 100.0, // Adjust width as needed
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(10.0),
+  Widget _buildCategoryBox(String category, String imagePath) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: [
+          Image.asset(
+            imagePath,
+            width: 111.0, // Decrease width by 9 pixels
+            height: 111.0, // Decrease height by 9 pixels
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 5.0), // Add space between image and text
+          Text(
+            category,
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
-      alignment: Alignment.center,
-      child: Text(category),
     );
   }
 
@@ -226,8 +237,8 @@ class _DashboardPageState extends State<DashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width: 91, // Decrease width by 9 pixels
+              height: 91, // Decrease height by 9 pixels
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10),
@@ -235,8 +246,8 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Center(
                 child: Image.asset(
                   restaurant.logo,
-                  width: 80,
-                  height: 80,
+                  width: 72,
+                  height: 72,
                   fit: BoxFit.contain,
                 ),
               ),
