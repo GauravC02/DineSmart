@@ -5,10 +5,10 @@ import 'login.dart'; // Import your login file
 import 'signup.dart'; // Import your signup file
 
 void main() {
-  runApp(LoginSignupApp());
+  runApp(DineSmart());
 }
 
-class LoginSignupApp extends StatelessWidget {
+class DineSmart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

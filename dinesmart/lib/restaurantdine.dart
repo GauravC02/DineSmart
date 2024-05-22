@@ -1,69 +1,30 @@
 import 'package:flutter/material.dart';
 import 'restaurants.dart';
+import 'menu.dart';
 
-class RestaurantItem extends StatelessWidget {
-  final Restaurant restaurant;
-
-  RestaurantItem({required this.restaurant});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Image.asset(
-                restaurant.logo,
-                width: 80,
-                height: 80,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                restaurant.name,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Location: ${restaurant.location}',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RestaurantProfilePage extends StatelessWidget {
+class RestaurantProfilePage extends StatefulWidget {
   final Restaurant restaurant;
 
   RestaurantProfilePage({required this.restaurant});
 
   @override
+  _RestaurantProfilePageState createState() => _RestaurantProfilePageState();
+}
+
+class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
+  late MenuCategory _selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = menu.first;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(restaurant.name),
+        title: Text(widget.restaurant.name),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,7 +39,7 @@ class RestaurantProfilePage extends StatelessWidget {
                 height: 200, // Adjust height as needed
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(restaurant.coverImage),
+                    image: AssetImage(widget.restaurant.coverImage),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -87,7 +48,7 @@ class RestaurantProfilePage extends StatelessWidget {
                 child: Container(
                   color: Color.fromARGB(255, 255, 255, 255),
                   child: Image.asset(
-                    restaurant.logo,
+                    widget.restaurant.logo,
                     width: 100,
                     height: 100,
                   ),
@@ -97,7 +58,7 @@ class RestaurantProfilePage extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            restaurant.name,
+            widget.restaurant.name,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -108,12 +69,45 @@ class RestaurantProfilePage extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                CategoryItem(category: 'Snacks'),
-                CategoryItem(category: 'Drinks'),
-                CategoryItem(category: 'Dinner'),
-                CategoryItem(category: 'Breakfast'),
-                CategoryItem(category: 'Dessert'),
+                for (MenuCategory category in menu)
+                  CategoryButton(
+                    category: category,
+                    isSelected: category == _selectedCategory,
+                    onPressed: () {
+                      setState(() {
+                        _selectedCategory = category;
+                      });
+                    },
+                  ),
               ],
+            ),
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      _selectedCategory.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (MenuItem item in _selectedCategory.items)
+                        MenuItemWidget(item: item),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -122,29 +116,66 @@ class RestaurantProfilePage extends StatelessWidget {
   }
 }
 
-class CategoryItem extends StatelessWidget {
-  final String category;
+class CategoryButton extends StatelessWidget {
+  final MenuCategory category;
+  final bool isSelected;
+  final VoidCallback onPressed;
 
-  CategoryItem({required this.category});
+  CategoryButton({
+    required this.category,
+    required this.isSelected,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(20),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected
+              ? Colors.blue
+              : Colors.grey[200], // Use backgroundColor for background color
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
         child: Text(
-          category,
+          category.name,
           style: TextStyle(
-            color: Colors.white,
+            color: isSelected ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
     );
   }
+}
+
+class MenuItemWidget extends StatelessWidget {
+  final MenuItem item;
+
+  MenuItemWidget({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Text(
+        '${item.name} - \$${item.price.toStringAsFixed(2)}',
+        style: TextStyle(
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: RestaurantProfilePage(
+        restaurant: allRestaurants[
+            0]), // Change the index to display different restaurants
+  ));
 }
