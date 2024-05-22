@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'restaurants.dart';
 import 'menu.dart';
+import 'bottomnavigationbar.dart'; // Import the BottomNavigationBarWidget
 
 class RestaurantProfilePage extends StatefulWidget {
   final Restaurant restaurant;
@@ -26,76 +27,86 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
       appBar: AppBar(
         title: Text(widget.restaurant.name),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(widget.restaurant.coverImage),
-                    fit: BoxFit.cover,
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(widget.restaurant.coverImage),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ClipOval(
+                          child: Container(
+                            color: Colors.white,
+                            child: Image.asset(
+                              widget.restaurant.logo,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ClipOval(
-                  child: Container(
-                    color: Colors.white,
-                    child: Image.asset(
-                      widget.restaurant.logo,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      widget.restaurant.name,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              widget.restaurant.name,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (MenuCategory category in widget.restaurant.menu)
-                  CategoryButton(
-                    category: category,
-                    isSelected: category == _selectedCategory,
-                    onPressed: () {
-                      setState(() {
-                        _selectedCategory = category;
-                      });
-                    },
+                  SizedBox(height: 20),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (MenuCategory category in widget.restaurant.menu)
+                          CategoryButton(
+                            category: category,
+                            isSelected: category == _selectedCategory,
+                            onPressed: () {
+                              setState(() {
+                                _selectedCategory = category;
+                              });
+                            },
+                          ),
+                      ],
+                    ),
                   ),
-              ],
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _selectedCategory.items.length,
-              itemBuilder: (context, index) {
-                return MenuItemWidget(item: _selectedCategory.items[index]);
-              },
-            ),
-          ),
-        ],
+          ];
+        },
+        body: ListView.builder(
+          itemCount: _selectedCategory.items.length,
+          itemBuilder: (context, index) {
+            return MenuItemWidget(item: _selectedCategory.items[index]);
+          },
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBarWidget(
+        selectedIndex: 0, // Set the appropriate index for the selected tab
+        onItemTapped: (index) {}, // Define the functionality for tapping items
       ),
     );
   }
