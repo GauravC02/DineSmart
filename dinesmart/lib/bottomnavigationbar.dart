@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'qrscanner.dart'; // Import the QR scanner page
 import 'dashboard.dart'; // Import the DashboardPage
 import 'cart.dart'; // Import the CartPage
+import 'favorites.dart'; // Import the FavoritesPage
+import 'history.dart'; // Import the HistoryPage
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -47,11 +49,23 @@ class BottomNavigationBarWidget extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => DashboardPage()),
           );
+        } else if (index == 1) {
+          // If the Favorites button is tapped, navigate to the FavoritesPage
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FavoritesPage()),
+          );
         } else if (index == 2) {
           // If the QR Code item is tapped, navigate to the QR scanner page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => QRScannerPage()),
+          );
+        } else if (index == 3) {
+          // If the History button is tapped, navigate to the HistoryPage
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HistoryPage()),
           );
         } else if (index == 4) {
           // If the Cart button is tapped, navigate to the CartPage
