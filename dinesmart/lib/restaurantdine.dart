@@ -27,16 +27,14 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
         title: Text(widget.restaurant.name),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
-          // Cover Image with Logo
           Stack(
             alignment: Alignment.bottomLeft,
             children: [
               Container(
                 width: double.infinity,
-                height: 200, // Adjust height as needed
+                height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(widget.restaurant.coverImage),
@@ -44,24 +42,30 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                   ),
                 ),
               ),
-              ClipOval(
-                child: Container(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  child: Image.asset(
-                    widget.restaurant.logo,
-                    width: 100,
-                    height: 100,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ClipOval(
+                  child: Container(
+                    color: Colors.white,
+                    child: Image.asset(
+                      widget.restaurant.logo,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 20),
-          Text(
-            widget.restaurant.name,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              widget.restaurant.name,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           SizedBox(height: 20),
@@ -84,30 +88,11 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
           ),
           SizedBox(height: 20),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      _selectedCategory.name,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (MenuItem item in _selectedCategory.items)
-                        MenuItemWidget(item: item),
-                    ],
-                  ),
-                ],
-              ),
+            child: ListView.builder(
+              itemCount: _selectedCategory.items.length,
+              itemBuilder: (context, index) {
+                return MenuItemWidget(item: _selectedCategory.items[index]);
+              },
             ),
           ),
         ],
@@ -134,9 +119,7 @@ class CategoryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected
-              ? Colors.blue
-              : Colors.grey[200], // Use backgroundColor for background color
+          backgroundColor: isSelected ? Colors.blue : Colors.grey[200],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -153,19 +136,91 @@ class CategoryButton extends StatelessWidget {
   }
 }
 
-class MenuItemWidget extends StatelessWidget {
+class MenuItemWidget extends StatefulWidget {
   final MenuItem item;
 
   MenuItemWidget({required this.item});
 
   @override
+  _MenuItemWidgetState createState() => _MenuItemWidgetState();
+}
+
+class _MenuItemWidgetState extends State<MenuItemWidget> {
+  int quantity = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Text(
-        '${item.name} - \$${item.price.toStringAsFixed(2)}',
-        style: TextStyle(
-          fontSize: 14,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.item.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        '\$${widget.item.price.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 31), // Add SizedBox with width 31 pixels
+                Row(
+                  children: [
+                    IconButton(
+                      iconSize: 20,
+                      onPressed: () {
+                        setState(() {
+                          if (quantity > 0) quantity--;
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                    Text(
+                      quantity.toString(),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      iconSize: 20,
+                      onPressed: () {
+                        setState(() {
+                          quantity++;
+                        });
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
