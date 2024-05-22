@@ -17,7 +17,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   @override
   void initState() {
     super.initState();
-    _selectedCategory = menu.first;
+    _selectedCategory = widget.restaurant.menu.first;
   }
 
   @override
@@ -69,7 +69,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (MenuCategory category in menu)
+                for (MenuCategory category in widget.restaurant.menu)
                   CategoryButton(
                     category: category,
                     isSelected: category == _selectedCategory,
@@ -170,12 +170,4 @@ class MenuItemWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: RestaurantProfilePage(
-        restaurant: allRestaurants[
-            0]), // Change the index to display different restaurants
-  ));
 }
