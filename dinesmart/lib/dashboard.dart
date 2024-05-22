@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'signup.dart';
 import 'restaurantdine.dart';
+import 'restaurants.dart';
 import 'bottomnavigationbar.dart'; // Import the bottomnavigationbar.dart file
 
 class DashboardContent extends StatelessWidget {
@@ -213,7 +214,6 @@ class _DashboardPageState extends State<DashboardPage> {
             category,
             style: TextStyle(
               fontSize: 14.0,
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],
