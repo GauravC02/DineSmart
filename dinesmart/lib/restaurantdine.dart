@@ -14,11 +14,17 @@ class RestaurantProfilePage extends StatefulWidget {
 
 class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   late MenuCategory _selectedCategory;
+  late Map<int, int> _itemQuantities; // Map to store quantity for each item
 
   @override
   void initState() {
     super.initState();
     _selectedCategory = widget.restaurant.menu.first;
+    _itemQuantities = Map.fromIterable(
+      _selectedCategory.items,
+      key: (item) => item.id,
+      value: (item) => 0,
+    );
   }
 
   @override
@@ -100,7 +106,17 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
         body: ListView.builder(
           itemCount: _selectedCategory.items.length,
           itemBuilder: (context, index) {
-            return MenuItemWidget(item: _selectedCategory.items[index]);
+            final item = _selectedCategory.items[index];
+            return MenuItemWidget(
+              item: item,
+              quantity:
+                  _itemQuantities[item.id] ?? 0, // Pass quantity for the item
+              onQuantityChanged: (newQuantity) {
+                setState(() {
+                  _itemQuantities[item.id] = newQuantity; // Update quantity
+                });
+              },
+            );
           },
         ),
       ),
@@ -147,17 +163,16 @@ class CategoryButton extends StatelessWidget {
   }
 }
 
-class MenuItemWidget extends StatefulWidget {
+class MenuItemWidget extends StatelessWidget {
   final MenuItem item;
+  final int quantity;
+  final ValueChanged<int> onQuantityChanged;
 
-  MenuItemWidget({required this.item});
-
-  @override
-  _MenuItemWidgetState createState() => _MenuItemWidgetState();
-}
-
-class _MenuItemWidgetState extends State<MenuItemWidget> {
-  int quantity = 0;
+  MenuItemWidget({
+    required this.item,
+    required this.quantity,
+    required this.onQuantityChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +197,7 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.item.name,
+                        item.name,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -190,7 +205,7 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '\$${widget.item.price.toStringAsFixed(2)}',
+                        '\$${item.price.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -205,9 +220,7 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
                     IconButton(
                       iconSize: 20,
                       onPressed: () {
-                        setState(() {
-                          if (quantity > 0) quantity--;
-                        });
+                        onQuantityChanged(quantity - 1); // Decrease quantity
                       },
                       icon: Icon(Icons.remove),
                     ),
@@ -221,9 +234,7 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
                     IconButton(
                       iconSize: 20,
                       onPressed: () {
-                        setState(() {
-                          quantity++;
-                        });
+                        onQuantityChanged(quantity + 1); // Increase quantity
                       },
                       icon: Icon(Icons.add),
                     ),
