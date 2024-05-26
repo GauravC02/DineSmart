@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'restaurants.dart';
 import 'menu.dart';
 import 'bottomnavigationbar.dart'; // Import the BottomNavigationBarWidget
+import 'cart.dart'; // Import the CartPage
 
 class RestaurantProfilePage extends StatefulWidget {
   final Restaurant restaurant;
@@ -23,8 +24,19 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     _itemQuantities = Map.fromIterable(
       _selectedCategory.items,
       key: (item) => item.id,
-      value: (item) => 0,
+      value: (item) => 0.toInt(), // Ensure quantity starts from whole numbers
     );
+  }
+
+  void _onQuantityChanged(int itemId, int newQuantity) {
+    setState(() {
+      if (newQuantity >= 0) {
+        _itemQuantities[itemId] = newQuantity;
+      } else {
+        // Prevent negative quantities
+        _itemQuantities[itemId] = 0;
+      }
+    });
   }
 
   @override
@@ -32,6 +44,19 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.restaurant.name),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: IconButton(
+              onPressed: () {
+                CartPage cartPage = CartPage();
+                cartPage.addToCart(context, _selectedCategory, _itemQuantities,
+                    widget.restaurant.name);
+              },
+              icon: Icon(Icons.shopping_cart), // Use the shopping cart icon
+            ),
+          ),
+        ],
       ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -109,12 +134,9 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
             final item = _selectedCategory.items[index];
             return MenuItemWidget(
               item: item,
-              quantity:
-                  _itemQuantities[item.id] ?? 0, // Pass quantity for the item
+              quantity: _itemQuantities[item.id] ?? 0,
               onQuantityChanged: (newQuantity) {
-                setState(() {
-                  _itemQuantities[item.id] = newQuantity; // Update quantity
-                });
+                _onQuantityChanged(item.id, newQuantity);
               },
             );
           },

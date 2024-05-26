@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'qrscanner.dart'; // Import the QR scanner page
 import 'dashboard.dart'; // Import the DashboardPage
-import 'cart.dart'; // Import the CartPage
 import 'favorites.dart'; // Import the FavoritesPage
 import 'history.dart'; // Import the HistoryPage
+import 'settings.dart'; // Import the SettingsPage
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -36,45 +36,40 @@ class BottomNavigationBarWidget extends StatelessWidget {
           label: 'History',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart, color: Colors.blue),
-          label: 'Cart',
+          icon: Icon(Icons.settings, color: Colors.blue),
+          label: 'Settings',
         ),
       ],
       currentIndex: selectedIndex,
       selectedItemColor: Colors.blue,
       onTap: (index) {
         if (index == 0) {
-          // If the Home button is tapped, navigate to the DashboardPage
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => DashboardPage()),
           );
         } else if (index == 1) {
-          // If the Favorites button is tapped, navigate to the FavoritesPage
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => FavoritesPage()),
           );
         } else if (index == 2) {
-          // If the QR Code item is tapped, navigate to the QR scanner page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => QRScannerPage()),
           );
         } else if (index == 3) {
-          // If the History button is tapped, navigate to the HistoryPage
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HistoryPage()),
           );
         } else if (index == 4) {
-          // If the Cart button is tapped, navigate to the CartPage
           Navigator.push(
+            // Check for the matching parentheses here
             context,
-            MaterialPageRoute(builder: (context) => CartPage()),
-          );
+            MaterialPageRoute(builder: (context) => SettingsPage()),
+          ); // Ensure there is a semicolon here
         } else {
-          // Call the onItemTapped function for other items
           onItemTapped(index);
         }
       },
