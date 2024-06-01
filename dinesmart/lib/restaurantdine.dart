@@ -24,7 +24,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     _itemQuantities = Map.fromIterable(
       _selectedCategory.items,
       key: (item) => item.id,
-      value: (item) => 0.toInt(), // Ensure quantity starts from whole numbers
+      value: (item) => 0,
     );
   }
 
@@ -39,6 +39,21 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     });
   }
 
+  MenuItem _findMenuItem(int itemId) {
+    for (var category in widget.restaurant.menu) {
+      final item = category.items.firstWhere(
+        (item) => item.id == itemId,
+        orElse: () =>
+            MenuItem(id: -1, name: '', price: 0.0), // Return a default MenuItem
+      );
+      if (item.id != -1) {
+        return item;
+      }
+    }
+    throw Exception(
+        'Item with ID $itemId not found.'); // Throw an exception if no item is found
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,9 +64,18 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: IconButton(
               onPressed: () {
-                CartPage cartPage = CartPage();
-                cartPage.addToCart(context, _selectedCategory, _itemQuantities,
-                    widget.restaurant.name);
+                CartPage(
+                  items: _itemQuantities.entries
+                      .where((entry) => entry.value > 0)
+                      .map((entry) => {
+                            'id': entry.key,
+                            'quantity': entry.value,
+                            'name': _findMenuItem(entry.key).name,
+                            'price': _findMenuItem(entry.key).price,
+                          })
+                      .toList(),
+                  restaurantName: widget.restaurant.name,
+                ).addToCart(context);
               },
               icon: Icon(Icons.shopping_cart), // Use the shopping cart icon
             ),

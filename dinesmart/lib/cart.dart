@@ -1,55 +1,24 @@
 import 'package:flutter/material.dart';
 import 'bottomnavigationbar.dart';
-import 'menu.dart';
+import 'paymentdetails.dart';
 
 class CartPage extends StatefulWidget {
-  final List<Map<String, dynamic>>? items; // List of items in the cart
-  final String? restaurantName; // Name of the restaurant
+  final List<Map<String, dynamic>> items; // List of items in the cart
+  final String restaurantName; // Name of the restaurant
 
-  CartPage({Key? key, this.items, this.restaurantName}) : super(key: key);
+  CartPage({Key? key, required this.items, required this.restaurantName})
+      : super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
 
-  void addToCart(BuildContext context, MenuCategory selectedCategory,
-      Map<int, int> itemQuantities, String restaurantName) {
-    List<Map<String, dynamic>> cartItems = [];
-
-    itemQuantities.forEach((itemId, quantity) {
-      if (quantity > 0) {
-        // Add item to the cart list with additional information
-        cartItems.add({
-          'name': selectedCategory.items
-              .firstWhere((item) => item.id == itemId)
-              .name,
-          'price': selectedCategory.items
-              .firstWhere((item) => item.id == itemId)
-              .price,
-          'quantity': quantity,
-          'restaurantName': restaurantName, // Pass restaurant name
-        });
-      }
-    });
-
-    if (cartItems.isNotEmpty) {
-      // Navigate to CartPage and pass the cart items and restaurant name
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CartPage(
-            items: cartItems,
-            restaurantName: restaurantName,
-          ),
-        ),
-      );
-    } else {
-      // Show a snackbar or toast indicating that no items are selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select items to add to cart'),
-        ),
-      );
-    }
+  void addToCart(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => this,
+      ),
+    );
   }
 }
 
@@ -73,17 +42,17 @@ class _CartPageState extends State<CartPage> {
             onPressed: () {
               // Add functionality to clear the cart
               setState(() {
-                widget.items!.clear();
+                widget.items.clear();
               });
             },
           ),
         ],
       ),
-      body: widget.items != null && widget.items!.isNotEmpty
+      body: widget.items.isNotEmpty
           ? ListView.builder(
-              itemCount: widget.items!.length,
+              itemCount: widget.items.length,
               itemBuilder: (context, index) {
-                final item = widget.items![index];
+                final item = widget.items[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 16.0),
@@ -99,14 +68,14 @@ class _CartPageState extends State<CartPage> {
                         children: [
                           Text('Price: \$${item['price']}'),
                           Text('Quantity: ${item['quantity']}'),
-                          Text('Restaurant: ${widget.restaurantName ?? ""}'),
+                          Text('Restaurant: ${widget.restaurantName}'),
                         ],
                       ),
                       trailing: IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
-                            widget.items!.removeAt(index);
+                            widget.items.removeAt(index);
                           });
                         },
                       ),
@@ -132,12 +101,18 @@ class _CartPageState extends State<CartPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Total: \$${calculateTotal(widget.items ?? [])}',
+              'Total: \$${calculateTotal(widget.items)}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ElevatedButton(
               onPressed: () {
-                // Implement checkout functionality
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentDetailsPage(
+                        totalAmount: calculateTotal(widget.items)),
+                  ),
+                );
               },
               child: Text('Checkout'),
             ),
