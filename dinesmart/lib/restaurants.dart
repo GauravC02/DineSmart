@@ -7,6 +7,7 @@ class Restaurant {
   final String location;
   final String coverImage;
   final List<MenuCategory> menu;
+  bool isFavorite;
 
   Restaurant({
     required this.name,
@@ -14,6 +15,7 @@ class Restaurant {
     required this.location,
     required this.coverImage,
     required this.menu,
+    this.isFavorite = false,
   });
 }
 
@@ -53,5 +55,4 @@ final List<Restaurant> allRestaurants = [
     coverImage: 'assets/starbuckscover.png',
     menu: starbucksMenu,
   ),
-  // Add more restaurants with their respective menus
 ];

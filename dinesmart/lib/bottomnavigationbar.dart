@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'qrscanner.dart'; // Import the QR scanner page
-import 'dashboard.dart'; // Import the DashboardPage
-import 'favorites.dart'; // Import the FavoritesPage
-import 'history.dart'; // Import the HistoryPage
-import 'settings.dart'; // Import the SettingsPage
+import 'qrscanner.dart';
+import 'dashboard.dart';
+import 'favorites.dart';
+import 'history.dart';
+import 'settings.dart';
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -65,10 +65,9 @@ class BottomNavigationBarWidget extends StatelessWidget {
           );
         } else if (index == 4) {
           Navigator.push(
-            // Check for the matching parentheses here
             context,
             MaterialPageRoute(builder: (context) => SettingsPage()),
-          ); // Ensure there is a semicolon here
+          );
         } else {
           onItemTapped(index);
         }

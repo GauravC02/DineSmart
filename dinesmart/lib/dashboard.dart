@@ -3,7 +3,7 @@ import 'login.dart';
 import 'signup.dart';
 import 'restaurantdine.dart';
 import 'restaurants.dart';
-import 'bottomnavigationbar.dart'; // Import the bottomnavigationbar.dart file
+import 'bottomnavigationbar.dart';
 
 class DashboardContent extends StatelessWidget {
   @override
@@ -30,18 +30,15 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''), // Empty title
-        automaticallyImplyLeading: false, // Remove default back button
+        title: Text(''),
+        automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(Icons.person), // User icon
-          onPressed: () {
-            // Handle user icon tap
-            // You can implement any desired functionality here
-          },
+          icon: Icon(Icons.person),
+          onPressed: () {},
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search), // Search icon
+            icon: Icon(Icons.search),
             onPressed: () {
               showSearch(
                 context: context,
@@ -63,7 +60,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     margin: EdgeInsets.only(right: 8.0),
                     child: TextButton(
                       onPressed: () {
-                        // Handle login button press
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => LoginPage()),
@@ -87,7 +83,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     margin: EdgeInsets.only(left: 8.0),
                     child: TextButton(
                       onPressed: () {
-                        // Handle signup button press
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => SignupPage()),
@@ -110,7 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          SizedBox(height: 16.0), // Add space between buttons and offer banner
+          SizedBox(height: 16.0),
           Container(
             height: 150.0,
             child: ListView(
@@ -119,11 +114,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 _buildOfferImage(context, 'assets/kfcoffer.png'),
                 _buildOfferImage(context, 'assets/pizzahutoffer.png'),
                 _buildOfferImage(context, 'assets/burgerkingoffer.png'),
-                // Add more offer images as needed
               ],
             ),
           ),
-          SizedBox(height: 16.0), // Add space between banners and categories
+          SizedBox(height: 16.0),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
@@ -136,9 +130,9 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          SizedBox(height: 8.0), // Add space below categories title
+          SizedBox(height: 8.0),
           Container(
-            height: 141.0, // Match the height to the ListView of restaurants
+            height: 141.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
@@ -147,12 +141,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 _buildCategoryBox('Dinner', 'assets/dinner.png'),
                 _buildCategoryBox('Desserts', 'assets/dessert.png'),
                 _buildCategoryBox('Drinks', 'assets/drink.png'),
-                // Add more categories as needed
               ],
             ),
           ),
-          SizedBox(
-              height: 16.0), // Add space between categories and restaurants
+          SizedBox(height: 16.0),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
@@ -165,9 +157,9 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          SizedBox(height: 8.0), // Add space below restaurants title
+          SizedBox(height: 8.0),
           Container(
-            height: 141.0, // Adjust height as needed
+            height: 141.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: allRestaurants.map((restaurant) {
@@ -181,7 +173,6 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
-        // Use the BottomNavigationBarWidget here
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
@@ -190,7 +181,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildOfferImage(BuildContext context, String imagePath) {
     return Container(
-      width: MediaQuery.of(context).size.width, // Use full screen width
+      width: MediaQuery.of(context).size.width,
       child: Image.asset(
         imagePath,
         fit: BoxFit.cover,
@@ -205,11 +196,11 @@ class _DashboardPageState extends State<DashboardPage> {
         children: [
           Image.asset(
             imagePath,
-            width: 111.0, // Decrease width by 9 pixels
-            height: 111.0, // Decrease height by 9 pixels
+            width: 111.0,
+            height: 111.0,
             fit: BoxFit.cover,
           ),
-          SizedBox(height: 5.0), // Add space between image and text
+          SizedBox(height: 5.0),
           Text(
             category,
             style: TextStyle(
@@ -231,26 +222,44 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         );
       },
+      onLongPress: () {
+        setState(() {
+          restaurant.isFavorite = !restaurant.isFavorite;
+        });
+      },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 91, // Decrease width by 9 pixels
-              height: 91, // Decrease height by 9 pixels
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Image.asset(
-                  restaurant.logo,
-                  width: 72,
-                  height: 72,
-                  fit: BoxFit.contain,
+            Stack(
+              children: [
+                Container(
+                  width: 91,
+                  height: 91,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      restaurant.logo,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-              ),
+                if (restaurant.isFavorite)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    ),
+                  ),
+              ],
             ),
             SizedBox(height: 5),
             Text(
@@ -291,8 +300,6 @@ class RestaurantSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // Implement your search logic here
-    // Return the search results widget
     return Container(
       color: Colors.white,
       child: Center(
@@ -306,8 +313,6 @@ class RestaurantSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Implement your search suggestions logic here
-    // Return the search suggestions widget
     return Container();
   }
 }

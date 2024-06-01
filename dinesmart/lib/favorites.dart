@@ -1,25 +1,39 @@
-// favorites.dart
 import 'package:flutter/material.dart';
 import 'bottomnavigationbar.dart';
+import 'restaurants.dart';
+import 'restaurantdine.dart';
 
 class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Restaurant> favoriteRestaurants =
+        allRestaurants.where((restaurant) => restaurant.isFavorite).toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Favorites'),
       ),
-      body: Center(
-        child: Text(
-          'Your favorite restaurants will be displayed here.',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: ListView.builder(
+        itemCount: favoriteRestaurants.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(favoriteRestaurants[index].name),
+            leading: Image.asset(favoriteRestaurants[index].logo),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RestaurantProfilePage(
+                      restaurant: favoriteRestaurants[index]),
+                ),
+              );
+            },
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
-        selectedIndex: 1, // Index of the Favorites page
-        onItemTapped: (index) {
-          // Handle tapping of items, if necessary
-        },
+        selectedIndex: 1,
+        onItemTapped: (index) {},
       ),
     );
   }
