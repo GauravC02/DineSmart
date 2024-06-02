@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bottomnavigationbar.dart';
-import 'paymentdetails.dart';
+import 'checkout.dart';
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> items; // List of items in the cart
@@ -109,8 +109,8 @@ class _CartPageState extends State<CartPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PaymentDetailsPage(
-                        totalAmount: calculateTotal(widget.items)),
+                    builder: (context) =>
+                        CheckoutPage(totalAmount: calculateTotal(widget.items)),
                   ),
                 );
               },
