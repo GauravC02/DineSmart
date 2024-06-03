@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
 import 'bottomnavigationbar.dart'; // Import the BottomNavigationBarWidget
 
 class QRScannerApp extends StatelessWidget {
@@ -53,7 +54,10 @@ class _QRScannerPageState extends State<QRScannerPage>
           ),
           QRView(
             key: GlobalKey(debugLabel: 'QR'),
-            onQRViewCreated: _onQRViewCreated,
+            onQRViewCreated: (controller) {
+              this.controller = controller;
+              _onQRViewCreated(controller);
+            },
           ),
           Center(
             child: AnimatedBuilder(
@@ -81,26 +85,31 @@ class _QRScannerPageState extends State<QRScannerPage>
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      // Update UI to display scanned data
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("QR Code Scanned"),
-          content:
-              Text(scanData.code ?? "No data"), // Using null-aware operator
-          actions: <Widget>[
-            TextButton(
-              // Changed FlatButton to TextButton
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+      String scannedUrl = scanData.code ?? ""; // Get the scanned URL
+      // Check if the scanned data is a valid URL
+      if (scannedUrl.isNotEmpty &&
+          Uri.tryParse(scannedUrl)?.isAbsolute == true) {
+        // Open the scanned URL in the default web browser
+        launch(scannedUrl);
+      } else {
+        // Show an error message if the scanned data is not a valid URL
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("QR Code Scanned"),
+            content: Text("Scanned data is not a valid URL"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     });
   }
 }
