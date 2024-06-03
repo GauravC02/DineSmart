@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'bottomnavigationbar.dart'; // Import the BottomNavigationBarWidget
 
-void main() {
-  runApp(QRScannerApp());
-}
-
 class QRScannerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,6 +45,12 @@ class _QRScannerPageState extends State<QRScannerPage>
       ),
       body: Stack(
         children: [
+          Container(
+            color:
+                Colors.black.withOpacity(0.5), // Semi-transparent black color
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
           QRView(
             key: GlobalKey(debugLabel: 'QR'),
             onQRViewCreated: _onQRViewCreated,
@@ -81,8 +83,24 @@ class _QRScannerPageState extends State<QRScannerPage>
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      // Do something with the scan data
-      print(scanData);
+      // Update UI to display scanned data
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("QR Code Scanned"),
+          content:
+              Text(scanData.code ?? "No data"), // Using null-aware operator
+          actions: <Widget>[
+            TextButton(
+              // Changed FlatButton to TextButton
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     });
   }
 }
