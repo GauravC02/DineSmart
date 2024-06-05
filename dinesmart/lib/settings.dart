@@ -1,12 +1,16 @@
-// settings.dart
 import 'package:flutter/material.dart';
+import 'bottomnavigationbar.dart';
 
 class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Removes the back arrow button
         title: Text('Settings'),
+        centerTitle: true,
       ),
       body: ListView(
         children: <Widget>[
@@ -43,6 +47,13 @@ class SettingsPage extends StatelessWidget {
           ),
           Divider(),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBarWidget(
+        selectedIndex: 4, // Selects the Settings tab
+        onItemTapped: (index) {
+          // Handle tapping on other bottom navigation bar items
+          // You might want to navigate accordingly here too
+        },
       ),
     );
   }

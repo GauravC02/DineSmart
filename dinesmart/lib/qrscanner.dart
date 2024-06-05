@@ -42,7 +42,9 @@ class _QRScannerPageState extends State<QRScannerPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('QR Scanner'),
+        centerTitle: true,
       ),
       body: Stack(
         children: [

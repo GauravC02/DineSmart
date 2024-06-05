@@ -11,7 +11,9 @@ class FavoritesPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Favorites'),
+        centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: favoriteRestaurants.length,
