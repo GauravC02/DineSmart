@@ -15,8 +15,11 @@ class BottomNavigationBarWidget extends StatelessWidget {
     required this.onItemTapped,
   }) : super(key: key);
 
-  BottomNavigationBarItem getItem(Icon i, String s) {
-    return BottomNavigationBarItem(icon: i, label: s);
+  BottomNavigationBarItem getItem(IconData icon, String label) {
+    return BottomNavigationBarItem(
+      icon: Icon(icon),
+      label: label,
+    );
   }
 
   Map<int, Widget> pagelist = {
@@ -30,38 +33,40 @@ class BottomNavigationBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var bottomItemList = <BottomNavigationBarItem>[
-      getItem(const Icon(Icons.home, color: Colors.blue), 'Home'),
-      getItem(const Icon(Icons.favorite, color: Colors.blue), 'Favorites'),
-      getItem(
-          const Icon(
-            Icons.qr_code,
-            color: Colors.blue,
-          ),
-          'QR Scanner'),
-      getItem(
-          const Icon(
-            Icons.history,
-            color: Colors.blue,
-          ),
-          'History'),
-      getItem(
-          const Icon(
-            Icons.settings,
-            color: Colors.blue,
-          ),
-          'Settings')
+      getItem(Icons.home, 'Home'),
+      getItem(Icons.favorite, 'Favorites'),
+      getItem(Icons.qr_code, 'QR Scan'),
+      getItem(Icons.history, 'History'),
+      getItem(Icons.settings, 'Settings')
     ];
 
-    return BottomNavigationBar(
-      items: bottomItemList,
-      currentIndex: selectedIndex,
-      selectedItemColor: Colors.blue,
-      onTap: (index) {
-        Navigator.pushReplacement(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: Offset(0, -3),
+          ),
+        ],
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed, // Add this line
+        items: bottomItemList,
+        currentIndex: selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.blue,
+        showUnselectedLabels: true,
+        onTap: (index) {
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => pagelist[index] ?? DashboardPage()));
-      },
+              builder: (context) => pagelist[index] ?? DashboardPage(),
+            ),
+          );
+        },
+      ),
     );
   }
 }

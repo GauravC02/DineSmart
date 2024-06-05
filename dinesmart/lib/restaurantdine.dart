@@ -57,6 +57,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Set background color to white
       appBar: AppBar(
         title: Text(widget.restaurant.name),
         actions: [
@@ -206,7 +207,8 @@ class CategoryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected ? Colors.blue : Colors.grey[200],
+          backgroundColor:
+              isSelected ? Colors.blue : Color.fromARGB(255, 221, 217, 217),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),

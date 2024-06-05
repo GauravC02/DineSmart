@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -8,14 +10,29 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  LatLng currentLocation = LatLng(0, 0); // Default location
-  String locationName = ""; // Location name initialized as empty
+  late LatLng currentLocation;
+  String locationName = "";
   late GoogleMapController mapController;
+  LatLng? deliveryLocation;
+  late StreamSubscription<Position> positionStreamSubscription;
 
   @override
   void initState() {
     super.initState();
     _setCurrentLocation();
+    positionStreamSubscription =
+        Geolocator.getPositionStream().listen((position) {
+      setState(() {
+        currentLocation = LatLng(position.latitude, position.longitude);
+      });
+      _getAddressFromLatLng(currentLocation);
+    });
+  }
+
+  @override
+  void dispose() {
+    positionStreamSubscription.cancel();
+    super.dispose();
   }
 
   // Method to set the current location to the user's current location
@@ -26,18 +43,38 @@ class _MapPageState extends State<MapPage> {
       currentLocation = LatLng(position.latitude, position.longitude);
     });
     _getAddressFromLatLng(currentLocation);
-    // Listen to location changes and update currentLocation
-    Geolocator.getPositionStream().listen((Position position) {
-      setState(() {
-        currentLocation = LatLng(position.latitude, position.longitude);
-      });
-      _getAddressFromLatLng(currentLocation);
-    });
+
+    if (currentLocation == null) {
+      // Set default location if current location is null
+      currentLocation = LatLng(0, 0);
+    }
+
+    // Move the camera to the current location with a specific zoom level
+    mapController.animateCamera(
+      CameraUpdate.newLatLngZoom(currentLocation, 14.0),
+    );
   }
 
   // Method to get address from latitude and longitude
   void _getAddressFromLatLng(LatLng latLng) async {
-    // Use geocoding to fetch the address from coordinates if needed
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        String address =
+            "${placemark.street}, ${placemark.locality}, ${placemark.country}";
+        setState(() {
+          locationName = address;
+        });
+      } else {
+        setState(() {
+          locationName = "";
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
@@ -46,17 +83,64 @@ class _MapPageState extends State<MapPage> {
       appBar: AppBar(
         title: Text('Map'),
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: currentLocation,
-          zoom: 14.0,
-        ),
-        markers: {}, // Remove all markers
-        onTap: _handleTap,
-        onMapCreated: _onMapCreated,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: false,
+      body: Column(
+        children: [
+          Expanded(
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: currentLocation,
+                zoom: 14.0,
+              ),
+              markers: {
+                if (deliveryLocation != null)
+                  Marker(
+                    markerId: MarkerId('pin'),
+                    position: deliveryLocation!,
+                    infoWindow: InfoWindow(
+                      title:
+                          locationName, // Display the location name above the pin
+                      anchor: Offset(0.5,
+                          -0.5), // Adjust the anchor point to position the info window above the marker
+                    ),
+                  ),
+              },
+              onTap: _handleTap,
+              onMapCreated: _onMapCreated,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                if (deliveryLocation == null) {
+                  // Show a popup dialog to the user to choose an address
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Error'),
+                      content: Text('Please choose a delivery address.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  // Execute logic to confirm delivery address
+                  _confirmAddress();
+                }
+              },
+              child: Text('Confirm Address'),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -67,40 +151,15 @@ class _MapPageState extends State<MapPage> {
 
   // Method to handle taps on the map
   void _handleTap(LatLng tappedPoint) {
-    // Handle taps on the map if needed
-  }
-}
-
-class CustomOverlay extends StatefulWidget {
-  final String overlayId;
-  final Function(BuildContext) overlayWidgetBuilder;
-  final LatLng position;
-
-  CustomOverlay({
-    required this.overlayId,
-    required this.overlayWidgetBuilder,
-    required this.position,
-  });
-
-  @override
-  _CustomOverlayState createState() => _CustomOverlayState();
-}
-
-class _CustomOverlayState extends State<CustomOverlay> {
-  @override
-  Widget build(BuildContext context) {
-    final overlayWidget = widget.overlayWidgetBuilder(context);
-    final overlay = OverlayEntry(
-      builder: (context) => Positioned(
-        left: widget.position.latitude,
-        top: widget.position.longitude,
-        child: overlayWidget,
-      ),
-    );
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Overlay.of(context)?.insert(overlay);
+    setState(() {
+      deliveryLocation = tappedPoint;
+      _getAddressFromLatLng(tappedPoint);
     });
+  }
 
-    return SizedBox.shrink();
+  // Method to confirm the address and navigate back to CheckoutPage
+  void _confirmAddress() {
+    // Pass the chosen deliveryLocation back to the previous screen
+    Navigator.pop(context, deliveryLocation);
   }
 }
