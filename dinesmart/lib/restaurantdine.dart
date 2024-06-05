@@ -64,18 +64,32 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: IconButton(
               onPressed: () {
-                CartPage(
-                  items: _itemQuantities.entries
-                      .where((entry) => entry.value > 0)
-                      .map((entry) => {
-                            'id': entry.key,
-                            'quantity': entry.value,
-                            'name': _findMenuItem(entry.key).name,
-                            'price': _findMenuItem(entry.key).price,
-                          })
-                      .toList(),
-                  restaurantName: widget.restaurant.name,
-                ).addToCart(context);
+                // Check if any items are selected
+                bool itemsSelected =
+                    _itemQuantities.entries.any((entry) => entry.value > 0);
+
+                // If no items are selected, show a Snackbar
+                if (!itemsSelected) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('The cart is empty.'),
+                    ),
+                  );
+                } else {
+                  // If items are selected, navigate to the cart page
+                  CartPage(
+                    items: _itemQuantities.entries
+                        .where((entry) => entry.value > 0)
+                        .map((entry) => {
+                              'id': entry.key,
+                              'quantity': entry.value,
+                              'name': _findMenuItem(entry.key).name,
+                              'price': _findMenuItem(entry.key).price,
+                            })
+                        .toList(),
+                    restaurantName: widget.restaurant.name,
+                  ).addToCart(context);
+                }
               },
               icon: Icon(Icons.shopping_cart), // Use the shopping cart icon
             ),

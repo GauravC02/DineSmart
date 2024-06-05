@@ -51,7 +51,9 @@ class PaymentPage extends StatelessWidget {
             SizedBox(width: 10),
             Text(
               title,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold), // Custom text style
             ),
           ],
         ),
