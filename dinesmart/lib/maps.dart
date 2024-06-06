@@ -10,7 +10,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  late LatLng currentLocation;
+  late LatLng currentLocation =
+      LatLng(27.7172, 85.3240); // Default coordinates for Kathmandu
   String locationName = "";
   late GoogleMapController mapController;
   LatLng? deliveryLocation;
@@ -19,7 +20,7 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    _setCurrentLocation();
+    _initializeCurrentLocation();
     positionStreamSubscription =
         Geolocator.getPositionStream().listen((position) {
       setState(() {
@@ -35,24 +36,13 @@ class _MapPageState extends State<MapPage> {
     super.dispose();
   }
 
-  // Method to set the current location to the user's current location
-  void _setCurrentLocation() async {
+  Future<void> _initializeCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
       currentLocation = LatLng(position.latitude, position.longitude);
     });
     _getAddressFromLatLng(currentLocation);
-
-    if (currentLocation == null) {
-      // Set default location if current location is null
-      currentLocation = LatLng(0, 0);
-    }
-
-    // Move the camera to the current location with a specific zoom level
-    mapController.animateCamera(
-      CameraUpdate.newLatLngZoom(currentLocation, 14.0),
-    );
   }
 
   // Method to get address from latitude and longitude

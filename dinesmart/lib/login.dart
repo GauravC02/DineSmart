@@ -1,5 +1,8 @@
+// login.dart
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'dashboard.dart';
+import 'signup.dart'; // Import the SignUp page if not already imported
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,6 +14,190 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = false;
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/restaurants.png'), // Replace 'background_image.jpg' with your image file path
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Container(
+            decoration: BoxDecoration(color: Colors.black.withOpacity(0.5)),
+            child: Center(
+              child: Container(
+                height: 420.0,
+                width: 300.0, // Adjusted width
+                padding: EdgeInsets.all(20.0), // Adjusted padding
+                decoration: BoxDecoration(
+                  color: Colors.white, // Changed container color to white
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'LOGIN',
+                        style: TextStyle(
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.bold,
+                          color:
+                              Colors.blueAccent, // Change color to blue accent
+                          shadows: [
+                            Shadow(
+                              blurRadius: 5.0,
+                              color: Colors.black.withOpacity(0.5),
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      _buildTextField(
+                        label: 'Email',
+                        controller: _emailController,
+                        icon: Icons.email,
+                      ),
+                      SizedBox(height: 20.0),
+                      _buildTextField(
+                        label: 'Password',
+                        controller: _passwordController,
+                        icon: Icons.lock,
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 15.0),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _rememberMe,
+                            onChanged: (value) {
+                              setState(() {
+                                _rememberMe = value!;
+                              });
+                            },
+                            fillColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.selected)) {
+                                  return Colors
+                                      .blueAccent; // Change color when checked
+                                }
+                                return Colors
+                                    .white; // Keep color white when not checked
+                              },
+                            ),
+                            checkColor:
+                                Colors.white, // Change color of checkmark
+                          ),
+                          Text(
+                            'Remember Me',
+                            style: TextStyle(
+                              color:
+                                  Colors.black, // Changed text color to black
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.0),
+                      ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 12),
+                          backgroundColor:
+                              Colors.blueAccent, // Changed to backgroundColor
+                        ),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(fontSize: 18, color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 25.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            child: Text(
+                              "Don't have an account? ",
+                              style: TextStyle(
+                                color:
+                                    Colors.black, // Changed text color to black
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: _navigateToSignUp, // Navigate to SignUp page
+                            child: Text(
+                              "SignUp",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight:
+                                    FontWeight.bold, // Make SignUp text bold
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      {required String label,
+      required TextEditingController controller,
+      required IconData icon,
+      bool obscureText = false}) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      style: TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(
+          icon,
+          color: Colors.blueAccent,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(
+            color: Colors.blueAccent,
+            width: 2.0,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(
+            color: Colors.blueAccent,
+            width: 2.0,
+          ),
+        ),
+      ),
+    );
+  }
+
   void _login() {
     String email = _emailController.text;
     String password = _passwordController.text;
@@ -19,10 +206,7 @@ class _LoginPageState extends State<LoginPage> {
       // Perform your login logic here
 
       // After successful login, navigate to the dashboard
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardPage()),
-      );
+      Navigator.pushReplacementNamed(context, '/dashboard');
     } else {
       showDialog(
         context: context,
@@ -45,106 +229,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _navigateToSignUp() {
-    Navigator.pushNamed(context, '/signup');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.lightBlue, Colors.blue],
-          ),
-        ),
-        child: Center(
-          child: Container(
-            width: 300.0, // Adjusted width
-            padding: EdgeInsets.all(20.0), // Adjusted padding
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.blueAccent, Colors.lightBlueAccent],
-              ),
-              borderRadius: BorderRadius.circular(20.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Login Page',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                  ),
-                  obscureText: true,
-                ),
-                SizedBox(height: 15.0),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _rememberMe,
-                      onChanged: (value) {
-                        setState(() {
-                          _rememberMe = value!;
-                        });
-                      },
-                    ),
-                    Text(
-                      'Remember Me',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: Text('Login'),
-                ),
-                SizedBox(height: 25.0),
-                GestureDetector(
-                  onTap: _navigateToSignUp,
-                  child: Text(
-                    "Don't have an account? SignUp",
-                    style: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    Navigator.pushReplacementNamed(context, '/signup');
   }
 }

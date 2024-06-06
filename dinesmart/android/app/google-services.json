@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1093290087204",
+    "project_id": "dine-smart-ed589",
+    "storage_bucket": "dine-smart-ed589.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093290087204:android:d52f5f5464057009d419b1",
+        "android_client_info": {
+          "package_name": "com.NineCredit.DineSmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDVVG85cATCeBkdaFRMYqvu-CdTzOx7vg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
