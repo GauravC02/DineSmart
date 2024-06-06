@@ -18,18 +18,36 @@ class FavoritesPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: favoriteRestaurants.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(favoriteRestaurants[index].name),
-            leading: Image.asset(favoriteRestaurants[index].logo),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RestaurantProfilePage(
-                      restaurant: favoriteRestaurants[index]),
+          return Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: 15.0), // Adjust the vertical padding as needed
+            child: ListTile(
+              title: Text(favoriteRestaurants[index].name),
+              leading: Container(
+                width: 80,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
                 ),
-              );
-            },
+                child: ClipOval(
+                  child: Image.asset(
+                    favoriteRestaurants[index].logo,
+                    fit: BoxFit.contain, // You can adjust the fit as needed
+                  ),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RestaurantProfilePage(
+                      restaurant: favoriteRestaurants[index],
+                    ),
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

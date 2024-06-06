@@ -203,13 +203,14 @@ class CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor:
-              isSelected ? Colors.blue : Color.fromARGB(255, 221, 217, 217),
+              isSelected ? theme.primaryColor : theme.colorScheme.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -217,7 +218,9 @@ class CategoryButton extends StatelessWidget {
         child: Text(
           category.name,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -239,6 +242,7 @@ class MenuItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Material(
@@ -247,7 +251,7 @@ class MenuItemWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.white,
+            color: theme.cardColor,
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -261,18 +265,12 @@ class MenuItemWidget extends StatelessWidget {
                     children: [
                       Text(
                         item.name,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: theme.textTheme.bodyLarge,
                       ),
                       SizedBox(height: 4),
                       Text(
                         '\$${item.price.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -285,21 +283,19 @@ class MenuItemWidget extends StatelessWidget {
                       onPressed: () {
                         onQuantityChanged(quantity - 1);
                       },
-                      icon: Icon(Icons.remove),
+                      icon: Icon(Icons.remove,
+                          color: theme.colorScheme.onSurface),
                     ),
                     Text(
                       quantity.toString(),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.bodyLarge,
                     ),
                     IconButton(
                       iconSize: 20,
                       onPressed: () {
                         onQuantityChanged(quantity + 1);
                       },
-                      icon: Icon(Icons.add),
+                      icon: Icon(Icons.add, color: theme.colorScheme.onSurface),
                     ),
                   ],
                 ),
