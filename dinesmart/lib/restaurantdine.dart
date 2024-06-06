@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'restaurants.dart';
 import 'menu.dart';
-import 'bottomnavigationbar.dart'; // Import the BottomNavigationBarWidget
-import 'cart.dart'; // Import the CartPage
+import 'bottomnavigationbar.dart';
+import 'cart.dart';
+import 'package:provider/provider.dart';
+import 'theme.dart';
 
 class RestaurantProfilePage extends StatefulWidget {
   final Restaurant restaurant;
@@ -15,7 +17,7 @@ class RestaurantProfilePage extends StatefulWidget {
 
 class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   late MenuCategory _selectedCategory;
-  late Map<int, int> _itemQuantities; // Map to store quantity for each item
+  late Map<int, int> _itemQuantities;
 
   @override
   void initState() {
@@ -30,12 +32,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
 
   void _onQuantityChanged(int itemId, int newQuantity) {
     setState(() {
-      if (newQuantity >= 0) {
-        _itemQuantities[itemId] = newQuantity;
-      } else {
-        // Prevent negative quantities
-        _itemQuantities[itemId] = 0;
-      }
+      _itemQuantities[itemId] = newQuantity >= 0 ? newQuantity : 0;
     });
   }
 
@@ -43,148 +40,152 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     for (var category in widget.restaurant.menu) {
       final item = category.items.firstWhere(
         (item) => item.id == itemId,
-        orElse: () =>
-            MenuItem(id: -1, name: '', price: 0.0), // Return a default MenuItem
+        orElse: () => MenuItem(id: -1, name: '', price: 0.0),
       );
       if (item.id != -1) {
         return item;
       }
     }
-    throw Exception(
-        'Item with ID $itemId not found.'); // Throw an exception if no item is found
+    throw Exception('Item with ID $itemId not found.');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white, // Set background color to white
-      appBar: AppBar(
-        title: Text(widget.restaurant.name),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: IconButton(
-              onPressed: () {
-                // Check if any items are selected
-                bool itemsSelected =
-                    _itemQuantities.entries.any((entry) => entry.value > 0);
-
-                // If no items are selected, show a Snackbar
-                if (!itemsSelected) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('The cart is empty.'),
-                    ),
-                  );
-                } else {
-                  // If items are selected, navigate to the cart page
-                  CartPage(
-                    items: _itemQuantities.entries
-                        .where((entry) => entry.value > 0)
-                        .map((entry) => {
-                              'id': entry.key,
-                              'quantity': entry.value,
-                              'name': _findMenuItem(entry.key).name,
-                              'price': _findMenuItem(entry.key).price,
-                            })
-                        .toList(),
-                    restaurantName: widget.restaurant.name,
-                  ).addToCart(context);
-                }
-              },
-              icon: Icon(Icons.shopping_cart), // Use the shopping cart icon
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, _) {
+        final themeData =
+            themeNotifier.isDarkMode ? ThemeData.dark() : ThemeData.light();
+        return Theme(
+          data: themeData,
+          child: Scaffold(
+            backgroundColor:
+                themeNotifier.isDarkMode ? Colors.black : Colors.white,
+            appBar: AppBar(
+              title: Text(widget.restaurant.name),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: IconButton(
+                    onPressed: () {
+                      bool itemsSelected = _itemQuantities.entries
+                          .any((entry) => entry.value > 0);
+                      if (!itemsSelected) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('The cart is empty.')),
+                        );
+                      } else {
+                        CartPage(
+                          items: _itemQuantities.entries
+                              .where((entry) => entry.value > 0)
+                              .map((entry) => {
+                                    'id': entry.key,
+                                    'quantity': entry.value,
+                                    'name': _findMenuItem(entry.key).name,
+                                    'price': _findMenuItem(entry.key).price,
+                                  })
+                              .toList(),
+                          restaurantName: widget.restaurant.name,
+                        ).addToCart(context);
+                      }
+                    },
+                    icon: Icon(Icons.shopping_cart),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    alignment: Alignment.bottomLeft,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(widget.restaurant.coverImage),
-                            fit: BoxFit.cover,
-                          ),
+            body: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          alignment: Alignment.bottomLeft,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage(widget.restaurant.coverImage),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ClipOval(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Image.asset(
+                                    widget.restaurant.logo,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ClipOval(
-                          child: Container(
-                            color: Colors.white,
-                            child: Image.asset(
-                              widget.restaurant.logo,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            widget.restaurant.name,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      widget.restaurant.name,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (MenuCategory category in widget.restaurant.menu)
-                          CategoryButton(
-                            category: category,
-                            isSelected: category == _selectedCategory,
-                            onPressed: () {
-                              setState(() {
-                                _selectedCategory = category;
-                              });
-                            },
+                        SizedBox(height: 20),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (MenuCategory category
+                                  in widget.restaurant.menu)
+                                CategoryButton(
+                                  category: category,
+                                  isSelected: category == _selectedCategory,
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedCategory = category;
+                                    });
+                                  },
+                                ),
+                            ],
                           ),
+                        ),
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                ],
+                ];
+              },
+              body: ListView.builder(
+                itemCount: _selectedCategory.items.length,
+                itemBuilder: (context, index) {
+                  final item = _selectedCategory.items[index];
+                  return MenuItemWidget(
+                    item: item,
+                    quantity: _itemQuantities[item.id] ?? 0,
+                    onQuantityChanged: (newQuantity) {
+                      _onQuantityChanged(item.id, newQuantity);
+                    },
+                  );
+                },
               ),
             ),
-          ];
-        },
-        body: ListView.builder(
-          itemCount: _selectedCategory.items.length,
-          itemBuilder: (context, index) {
-            final item = _selectedCategory.items[index];
-            return MenuItemWidget(
-              item: item,
-              quantity: _itemQuantities[item.id] ?? 0,
-              onQuantityChanged: (newQuantity) {
-                _onQuantityChanged(item.id, newQuantity);
-              },
-            );
-          },
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBarWidget(
-        selectedIndex: 0, // Set the appropriate index for the selected tab
-        onItemTapped: (index) {}, // Define the functionality for tapping items
-      ),
+            bottomNavigationBar: BottomNavigationBarWidget(
+              selectedIndex: 0,
+              onItemTapped: (index) {},
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -276,13 +277,13 @@ class MenuItemWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 31), // Add SizedBox with width 31 pixels
+                SizedBox(width: 31),
                 Row(
                   children: [
                     IconButton(
                       iconSize: 20,
                       onPressed: () {
-                        onQuantityChanged(quantity - 1); // Decrease quantity
+                        onQuantityChanged(quantity - 1);
                       },
                       icon: Icon(Icons.remove),
                     ),
@@ -296,7 +297,7 @@ class MenuItemWidget extends StatelessWidget {
                     IconButton(
                       iconSize: 20,
                       onPressed: () {
-                        onQuantityChanged(quantity + 1); // Increase quantity
+                        onQuantityChanged(quantity + 1);
                       },
                       icon: Icon(Icons.add),
                     ),
