@@ -55,7 +55,7 @@ class _MapPageState extends State<MapPage> {
         String address =
             "${placemark.street}, ${placemark.locality}, ${placemark.country}";
         setState(() {
-          locationName = address;
+          // Do not update locationName here
         });
       } else {
         setState(() {
@@ -143,8 +143,32 @@ class _MapPageState extends State<MapPage> {
   void _handleTap(LatLng tappedPoint) {
     setState(() {
       deliveryLocation = tappedPoint;
-      _getAddressFromLatLng(tappedPoint);
     });
+    _getAddressFromLatLng(tappedPoint);
+    // Fetch the address immediately after setting deliveryLocation
+    _fetchAddressForLocation(tappedPoint);
+  }
+
+  // Method to fetch the address for the tapped location and update locationName
+  void _fetchAddressForLocation(LatLng latLng) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        String address =
+            "${placemark.street}, ${placemark.locality}, ${placemark.country}";
+        setState(() {
+          locationName = address;
+        });
+      } else {
+        setState(() {
+          locationName = "";
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   // Method to confirm the address and navigate back to CheckoutPage

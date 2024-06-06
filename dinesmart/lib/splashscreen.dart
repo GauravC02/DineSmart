@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _visible = true;
       });
     });
-    Timer(Duration(seconds: 6), () {
+    Timer(Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => DashboardPage()),
