@@ -1,7 +1,10 @@
+// login.dart
+
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dashboard.dart';
-import 'signup.dart'; // Import the SignUp page if not already imported
+import 'signup.dart';
+import 'auth.dart'; // Import the Auth class
 
 class LoginPage extends StatefulWidget {
   @override
@@ -106,7 +109,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 20.0),
                       ElevatedButton(
-                        onPressed: _login,
+                        onPressed: () => Auth.login(
+                          context: context,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        ),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18.0),
@@ -187,36 +194,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  void _login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    if (email.isNotEmpty && password.isNotEmpty) {
-      // Perform your login logic here
-
-      // After successful login, navigate to the dashboard
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please enter email and password.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
   void _navigateToSignUp() {

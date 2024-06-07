@@ -1,6 +1,9 @@
+// signup.dart
+
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'dart:ui';
+import 'auth.dart'; // Import the Auth class
 
 class SignupPage extends StatefulWidget {
   @override
@@ -12,62 +15,6 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
-
-  void _signup() {
-    String email = _emailController.text;
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-    String confirmPassword = _confirmPasswordController.text;
-
-    if (email.isNotEmpty &&
-        username.isNotEmpty &&
-        password.isNotEmpty &&
-        confirmPassword.isNotEmpty) {
-      if (password == confirmPassword) {
-        print('Email: $email, Username: $username, Password: $password');
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Error'),
-              content: Text('Password and confirm password do not match.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please fill all fields.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _navigateToLogin() {
-    Navigator.pushReplacementNamed(context, '/login');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +94,13 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       SizedBox(height: 20.0),
                       ElevatedButton(
-                        onPressed: _signup,
+                        onPressed: () => Auth.signup(
+                          context: context,
+                          email: _emailController.text,
+                          username: _usernameController.text,
+                          password: _passwordController.text,
+                          confirmPassword: _confirmPasswordController.text,
+                        ),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18.0),
@@ -198,11 +151,12 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildTextField(
-      {required String label,
-      required TextEditingController controller,
-      required IconData icon,
-      bool obscureText = false}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required IconData icon,
+    bool obscureText = false,
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
@@ -229,5 +183,9 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
+  }
+
+  void _navigateToLogin() {
+    Navigator.pushReplacementNamed(context, '/login');
   }
 }
