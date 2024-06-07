@@ -1,4 +1,3 @@
-// login.dart
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dashboard.dart';
@@ -20,8 +19,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-                'assets/restaurants.png'), // Replace 'background_image.jpg' with your image file path
+            image: AssetImage('assets/restaurants.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -32,10 +30,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Center(
               child: Container(
                 height: 420.0,
-                width: 300.0, // Adjusted width
-                padding: EdgeInsets.all(20.0), // Adjusted padding
+                width: 300.0,
+                padding: EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Changed container color to white
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20.0),
                   boxShadow: [
                     BoxShadow(
@@ -55,8 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 32.0,
                           fontWeight: FontWeight.bold,
-                          color:
-                              Colors.blueAccent, // Change color to blue accent
+                          color: Colors.blueAccent,
                           shadows: [
                             Shadow(
                               blurRadius: 5.0,
@@ -92,21 +89,17 @@ class _LoginPageState extends State<LoginPage> {
                             fillColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.selected)) {
-                                  return Colors
-                                      .blueAccent; // Change color when checked
+                                  return Colors.blueAccent;
                                 }
-                                return Colors
-                                    .white; // Keep color white when not checked
+                                return Colors.white;
                               },
                             ),
-                            checkColor:
-                                Colors.white, // Change color of checkmark
+                            checkColor: Colors.white,
                           ),
                           Text(
                             'Remember Me',
                             style: TextStyle(
-                              color:
-                                  Colors.black, // Changed text color to black
+                              color: Colors.black,
                             ),
                           ),
                         ],
@@ -120,12 +113,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           padding: EdgeInsets.symmetric(
                               horizontal: 40, vertical: 12),
-                          backgroundColor:
-                              Colors.blueAccent, // Changed to backgroundColor
+                          backgroundColor: Colors.blueAccent,
                         ),
                         child: Text(
                           'Login',
-                          style: TextStyle(fontSize: 18, color: Colors.black),
+                          style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
                       SizedBox(height: 25.0),
@@ -136,19 +128,17 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               "Don't have an account? ",
                               style: TextStyle(
-                                color:
-                                    Colors.black, // Changed text color to black
+                                color: Colors.black,
                               ),
                             ),
                           ),
                           GestureDetector(
-                            onTap: _navigateToSignUp, // Navigate to SignUp page
+                            onTap: _navigateToSignUp,
                             child: Text(
                               "SignUp",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontWeight:
-                                    FontWeight.bold, // Make SignUp text bold
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -165,11 +155,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(
-      {required String label,
-      required TextEditingController controller,
-      required IconData icon,
-      bool obscureText = false}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required IconData icon,
+    bool obscureText = false,
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,

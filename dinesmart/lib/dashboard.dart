@@ -1,4 +1,3 @@
-//dashboard.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
@@ -34,7 +33,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Consumer<ThemeNotifier>(builder: (context, themeNotifier, _) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(''),
+          title: Text('Dashboard'),
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: Icon(Icons.person),
@@ -52,134 +51,138 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ],
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 8.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );
-                        },
-                        style: ButtonStyle(
-                          padding: MaterialStateProperty.all(
-                            EdgeInsets.symmetric(vertical: 16.0),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(right: 8.0),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(vertical: 16.0),
+                            ),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue),
                           ),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.blue),
-                        ),
-                        child: Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 8.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignupPage()),
-                          );
-                        },
-                        style: ButtonStyle(
-                          padding: MaterialStateProperty.all(
-                            EdgeInsets.symmetric(vertical: 16.0),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 8.0),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignupPage()),
+                            );
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(vertical: 16.0),
+                            ),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.green),
                           ),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
-                        ),
-                        child: Text(
-                          'Signup',
-                          style: TextStyle(color: Colors.white),
+                          child: Text(
+                            'Signup',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            Container(
-              height: 150.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildOfferImage(context, 'assets/kfcoffer.png'),
-                  _buildOfferImage(context, 'assets/pizzahutoffer.png'),
-                  _buildOfferImage(context, 'assets/burgerkingoffer.png'),
-                ],
+              SizedBox(height: 16.0),
+              Container(
+                height: 150.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildOfferImage(context, 'assets/kfcoffer.png'),
+                    _buildOfferImage(context, 'assets/pizzahutoffer.png'),
+                    _buildOfferImage(context, 'assets/burgerkingoffer.png'),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Categories',
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                  ),
-                ],
+              SizedBox(height: 16.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Categories',
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 8.0),
-            Container(
-              height: 141.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildCategoryBox('Breakfast', 'assets/breakfast.png'),
-                  _buildCategoryBox('Snacks', 'assets/snack.png'),
-                  _buildCategoryBox('Dinner', 'assets/dinner.png'),
-                  _buildCategoryBox('Desserts', 'assets/dessert.png'),
-                  _buildCategoryBox('Drinks', 'assets/drink.png'),
-                ],
+              SizedBox(height: 8.0),
+              Container(
+                height: 141.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildCategoryBox('Breakfast', 'assets/breakfast.png'),
+                    _buildCategoryBox('Snacks', 'assets/snack.png'),
+                    _buildCategoryBox('Dinner', 'assets/dinner.png'),
+                    _buildCategoryBox('Desserts', 'assets/dessert.png'),
+                    _buildCategoryBox('Drinks', 'assets/drink.png'),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Restaurants',
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                  ),
-                ],
+              SizedBox(height: 16.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Restaurants',
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 8.0),
-            Container(
-              height: 141.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: allRestaurants.map((restaurant) {
-                  return _buildRestaurantCard(context, restaurant);
-                }).toList(),
+              SizedBox(height: 8.0),
+              Container(
+                height: 141.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: allRestaurants.map((restaurant) {
+                    return _buildRestaurantCard(context, restaurant);
+                  }).toList(),
+                ),
               ),
-            ),
-            Expanded(
-              child: DashboardContent(),
-            ),
-          ],
+              SizedBox(height: 16.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: DashboardContent(),
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: BottomNavigationBarWidget(
           selectedIndex: _selectedIndex,
