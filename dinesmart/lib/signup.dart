@@ -1,9 +1,9 @@
 // signup.dart
 
 import 'package:flutter/material.dart';
-import 'login.dart';
 import 'dart:ui';
-import 'auth.dart'; // Import the Auth class
+import 'auth.dart';
+import 'login.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -52,7 +52,7 @@ class _SignupPageState extends State<SignupPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Signup',
+                        'SIGN UP',
                         style: TextStyle(
                           fontSize: 32.0,
                           fontWeight: FontWeight.bold,
@@ -92,7 +92,7 @@ class _SignupPageState extends State<SignupPage> {
                         icon: Icons.lock,
                         obscureText: true,
                       ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 30.0),
                       ElevatedButton(
                         onPressed: () => Auth.signup(
                           context: context,
@@ -110,7 +110,7 @@ class _SignupPageState extends State<SignupPage> {
                           backgroundColor: Colors.blueAccent,
                         ),
                         child: Text(
-                          'Sign up',
+                          'Sign Up',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
@@ -119,7 +119,6 @@ class _SignupPageState extends State<SignupPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           GestureDetector(
-                            onTap: _navigateToLogin,
                             child: Text(
                               "Already have an account? ",
                               style: TextStyle(
@@ -128,13 +127,12 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: _navigateToLogin, // Navigate to Login page
+                            onTap: _navigateToLogin,
                             child: Text(
                               "Login",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontWeight:
-                                    FontWeight.bold, // Make Login text bold
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -181,11 +179,15 @@ class _SignupPageState extends State<SignupPage> {
             width: 2.0,
           ),
         ),
+        labelStyle: TextStyle(color: Colors.black),
       ),
     );
   }
 
   void _navigateToLogin() {
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
   }
 }

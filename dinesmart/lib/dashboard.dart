@@ -1,3 +1,5 @@
+// dashboard.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
@@ -6,6 +8,7 @@ import 'restaurantdine.dart';
 import 'restaurants.dart';
 import 'bottomnavigationbar.dart';
 import 'theme.dart';
+import 'profile.dart'; // Import the ProfilePage
 
 class DashboardContent extends StatelessWidget {
   @override
@@ -30,15 +33,23 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final String? username =
+        ModalRoute.of(context)!.settings.arguments as String?;
+
     return Consumer<ThemeNotifier>(builder: (context, themeNotifier, _) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Dashboard'),
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: Icon(Icons.person),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
           ),
+          title: Text('Welcome ${username ?? "User"}'),
           actions: [
             IconButton(
               icon: Icon(Icons.search),

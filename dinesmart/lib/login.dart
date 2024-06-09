@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dashboard.dart';
 import 'signup.dart';
-import 'auth.dart'; // Import the Auth class
+import 'auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -192,11 +192,15 @@ class _LoginPageState extends State<LoginPage> {
             width: 2.0,
           ),
         ),
+        labelStyle: TextStyle(color: Colors.black),
       ),
     );
   }
 
   void _navigateToSignUp() {
-    Navigator.pushReplacementNamed(context, '/signup');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignupPage()),
+    );
   }
 }
