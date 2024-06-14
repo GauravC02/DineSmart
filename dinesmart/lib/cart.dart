@@ -1,3 +1,5 @@
+// cart.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'theme.dart';
@@ -160,6 +162,10 @@ class _CartPageState extends State<CartPage> {
                 onPressed: () {
                   setState(() {
                     widget.items.clear(); // Clear the cart
+                    // Update quantities to zero in RestaurantProfilePage
+                    for (var item in widget.items) {
+                      widget.updateItemQuantity(item['id'], 0);
+                    }
                   });
                 },
                 child: Text('ClearCart'),
@@ -298,6 +304,9 @@ class _CartPageState extends State<CartPage> {
                               setState(() {
                                 if (item['quantity'] > 1) {
                                   item['quantity']--;
+                                  // Update quantity in RestaurantProfilePage
+                                  widget.updateItemQuantity(
+                                      item['id'], item['quantity']);
                                 }
                               });
                             },
@@ -311,6 +320,9 @@ class _CartPageState extends State<CartPage> {
                             onPressed: () {
                               setState(() {
                                 item['quantity']++;
+                                // Update quantity in RestaurantProfilePage
+                                widget.updateItemQuantity(
+                                    item['id'], item['quantity']);
                               });
                             },
                           ),

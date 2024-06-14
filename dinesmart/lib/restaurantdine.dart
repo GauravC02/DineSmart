@@ -90,7 +90,6 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                                       })
                                   .toList(),
                               restaurantName: widget.restaurant.name,
-                              // Pass the function to synchronize quantities
                               updateItemQuantity: _onQuantityChanged,
                             ),
                           ),

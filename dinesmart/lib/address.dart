@@ -15,6 +15,8 @@ class _AddressPageState extends State<AddressPage> {
   String name = '';
   String address = '';
   String phoneNumber = '';
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class _AddressPageState extends State<AddressPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
               children: [
@@ -72,6 +75,64 @@ class _AddressPageState extends State<AddressPage> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      padding: EdgeInsets.all(12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            selectedDate != null
+                                ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
+                                : 'Select Date',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          Icon(Icons.calendar_today, color: Colors.blueAccent),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      _selectTime(context);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      padding: EdgeInsets.all(12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            selectedTime != null
+                                ? '${selectedTime!.hour}:${selectedTime!.minute}'
+                                : 'Select Time',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          Icon(Icons.access_time, color: Colors.blueAccent),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 16.0),
             GestureDetector(
@@ -132,5 +193,33 @@ class _AddressPageState extends State<AddressPage> {
 
   String _buildAddressString(Placemark placemark) {
     return '${placemark.street}, ${placemark.locality}';
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 5),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (picked != null && picked != selectedTime) {
+      setState(() {
+        selectedTime = picked;
+      });
+    }
   }
 }
