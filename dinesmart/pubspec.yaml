@@ -47,6 +47,8 @@ dependencies:
   cloud_firestore: ^5.0.0
   provider: ^5.0.0
   http: ^1.2.1
+  shared_preferences: ^2.0.15
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:
@@ -94,7 +96,18 @@ flutter:
      - assets/esewa.png
      - assets/khalti.png
      - assets/imepay.png
+     - assets/fonepay.png
      - assets/restaurants.png
+     - assets/omelette.png
+     - assets/pancakes.png
+     - assets/pizza.png
+     - assets/burger.png
+     - assets/spaghetti.png
+     - assets/steak.png
+     - assets/icecream.png
+     - assets/cake.png
+     - assets/alcohol.png
+     - assets/coffee.png
 
   #   - images/a_dot_ham.jpeg
 

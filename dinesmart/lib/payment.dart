@@ -1,72 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
+import 'theme.dart';
 
-class PaymentPage extends StatelessWidget {
+class PaymentPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Payment Options'),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildPaymentRow(
-            context,
-            'https://esewa.com.np/',
-            'eSewa',
-            'assets/esewa.png',
-          ),
-          _buildPaymentRow(
-            context,
-            'https://khalti.com/',
-            'Khalti',
-            'assets/khalti.png',
-          ),
-          _buildPaymentRow(
-            context,
-            'https://www.imepay.com.np/',
-            'IME Pay',
-            'assets/imepay.png',
-          ),
-        ],
+  _PaymentPageState createState() => _PaymentPageState();
+}
+
+class _PaymentPageState extends State<PaymentPage> {
+  Widget _buildCircularLogo(String imagePath, double size) {
+    return ClipOval(
+      child: Image.asset(
+        imagePath,
+        width: size,
+        height: size,
       ),
     );
   }
 
-  Widget _buildPaymentRow(
-      BuildContext context, String url, String title, String imagePath) {
-    return InkWell(
-      onTap: () {
-        _launchURL(url);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
+  @override
+  Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            CircleAvatar(
-              backgroundImage: AssetImage(imagePath),
-              radius: 30, // Adjust as needed
+            ListTile(
+              leading: _buildCircularLogo(
+                  'assets/esewa.png', 48), // Adjust size as needed
+              title: Text('eSewa'),
+              onTap: () {
+                // Handle eSewa payment
+              },
             ),
-            SizedBox(width: 10),
-            Text(
-              title,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold), // Custom text style
+            SizedBox(height: 16), // Add spacing between list tiles
+            ListTile(
+              leading: _buildCircularLogo(
+                  'assets/khalti.png', 48), // Adjust size as needed
+              title: Text('Khalti'),
+              onTap: () {
+                // Handle Khalti payment
+              },
+            ),
+            SizedBox(height: 16), // Add spacing between list tiles
+            ListTile(
+              leading: _buildCircularLogo(
+                  'assets/imepay.png', 48), // Adjust size as needed
+              title: Text('IME Pay'),
+              onTap: () {
+                // Handle IME Pay payment
+              },
+            ),
+            SizedBox(height: 16),
+            ListTile(
+              leading: _buildCircularLogo(
+                  'assets/fonepay.png', 48), // Adjust size as needed
+              title: Text('Fonepay'),
+              onTap: () {
+                // Handle Fonepay payment
+              },
             ),
           ],
         ),
       ),
     );
-  }
-
-  // Function to launch URLs
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }

@@ -1,7 +1,9 @@
+// restaurantdine.dart
+
 import 'package:flutter/material.dart';
 import 'restaurants.dart';
 import 'menu.dart';
-import 'bottomnavigationbar.dart';
+import 'package:dinesmart/bottomnavigationbar.dart' as bottom_nav_bar;
 import 'cart.dart';
 import 'package:provider/provider.dart';
 import 'theme.dart';
@@ -40,7 +42,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     for (var category in widget.restaurant.menu) {
       final item = category.items.firstWhere(
         (item) => item.id == itemId,
-        orElse: () => MenuItem(id: -1, name: '', price: 0.0),
+        orElse: () => MenuItem(id: -1, name: '', price: 0),
       );
       if (item.id != -1) {
         return item;
@@ -74,18 +76,25 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                           SnackBar(content: Text('The cart is empty.')),
                         );
                       } else {
-                        CartPage(
-                          items: _itemQuantities.entries
-                              .where((entry) => entry.value > 0)
-                              .map((entry) => {
-                                    'id': entry.key,
-                                    'quantity': entry.value,
-                                    'name': _findMenuItem(entry.key).name,
-                                    'price': _findMenuItem(entry.key).price,
-                                  })
-                              .toList(),
-                          restaurantName: widget.restaurant.name,
-                        ).addToCart(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CartPage(
+                              items: _itemQuantities.entries
+                                  .where((entry) => entry.value > 0)
+                                  .map((entry) => {
+                                        'id': entry.key,
+                                        'quantity': entry.value,
+                                        'name': _findMenuItem(entry.key).name,
+                                        'price': _findMenuItem(entry.key).price,
+                                      })
+                                  .toList(),
+                              restaurantName: widget.restaurant.name,
+                              // Pass the function to synchronize quantities
+                              updateItemQuantity: _onQuantityChanged,
+                            ),
+                          ),
+                        );
                       }
                     },
                     icon: Icon(Icons.shopping_cart),
@@ -179,7 +188,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                 },
               ),
             ),
-            bottomNavigationBar: BottomNavigationBarWidget(
+            bottomNavigationBar: bottom_nav_bar.BottomNavigationBarWidget(
               selectedIndex: 0,
               onItemTapped: (index) {},
             ),

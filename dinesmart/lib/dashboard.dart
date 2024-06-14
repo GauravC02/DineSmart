@@ -1,5 +1,3 @@
-// dashboard.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
@@ -9,6 +7,7 @@ import 'restaurants.dart';
 import 'bottomnavigationbar.dart';
 import 'theme.dart';
 import 'profile.dart'; // Import the ProfilePage
+import 'categories.dart'; // Import the categories.dart file
 
 class DashboardContent extends StatelessWidget {
   @override
@@ -154,13 +153,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 height: 141.0,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildCategoryBox('Breakfast', 'assets/breakfast.png'),
-                    _buildCategoryBox('Snacks', 'assets/snack.png'),
-                    _buildCategoryBox('Dinner', 'assets/dinner.png'),
-                    _buildCategoryBox('Desserts', 'assets/dessert.png'),
-                    _buildCategoryBox('Drinks', 'assets/drink.png'),
-                  ],
+                  children: allCategories.map((category) {
+                    return _buildCategoryBox(context, category);
+                  }).toList(),
                 ),
               ),
               SizedBox(height: 16.0),
@@ -217,25 +212,35 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildCategoryBox(String category, String imagePath) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        children: [
-          Image.asset(
-            imagePath,
-            width: 111.0,
-            height: 111.0,
-            fit: BoxFit.cover,
+  Widget _buildCategoryBox(BuildContext context, Category category) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryPage(category: category),
           ),
-          SizedBox(height: 5.0),
-          Text(
-            category,
-            style: TextStyle(
-              fontSize: 14.0,
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          children: [
+            Image.asset(
+              category.image,
+              width: 111.0,
+              height: 111.0,
+              fit: BoxFit.cover,
             ),
-          ),
-        ],
+            SizedBox(height: 5.0),
+            Text(
+              category.name,
+              style: TextStyle(
+                fontSize: 14.0,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
