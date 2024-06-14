@@ -1,5 +1,5 @@
-// categories.dart
 import 'package:flutter/material.dart';
+import 'bottomnavigationbar.dart';
 
 // Define a class for an item in a category
 class Item {
@@ -89,8 +89,7 @@ class CategoryPage extends StatelessWidget {
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
         ),
-        itemCount:
-            category.items.length, // Use the number of items in the category
+        itemCount: category.items.length,
         itemBuilder: (BuildContext context, int index) {
           Item item = category.items[index];
           return GestureDetector(
@@ -123,6 +122,35 @@ class CategoryPage extends StatelessWidget {
           );
         },
       ),
+      bottomNavigationBar: BottomNavigationBarWidget(
+        selectedIndex: 0, // Set the initial selected index as needed
+        onItemTapped: (index) {
+          // Handle tapping on items in the bottom navigation bar
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => _buildCategoryPage(index, context),
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  Widget _buildCategoryPage(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        return CategoryPage(category: allCategories[0]);
+      case 1:
+        return CategoryPage(category: allCategories[1]);
+      case 2:
+        return CategoryPage(category: allCategories[2]);
+      case 3:
+        return CategoryPage(category: allCategories[3]);
+      case 4:
+        return CategoryPage(category: allCategories[4]);
+      default:
+        return CategoryPage(category: allCategories[0]);
+    }
   }
 }

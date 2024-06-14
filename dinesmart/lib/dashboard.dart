@@ -346,25 +346,30 @@ class RestaurantSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final List<Restaurant> suggestedRestaurants = query.isEmpty
+        ? allRestaurants
+        : allRestaurants
+            .where((restaurant) =>
+                restaurant.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+
     return Container(
       color: Colors.white,
-      child: ListView(
-        children: [
-          ListTile(
-            title: Text('Suggestion 1'),
+      child: ListView.builder(
+        itemCount: suggestedRestaurants.length,
+        itemBuilder: (context, index) {
+          final Restaurant restaurant = suggestedRestaurants[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: AssetImage(restaurant.logo),
+            ),
+            title: Text(restaurant.name),
             onTap: () {
-              query = 'Suggestion 1';
+              query = restaurant.name;
               showResults(context);
             },
-          ),
-          ListTile(
-            title: Text('Suggestion 2'),
-            onTap: () {
-              query = 'Suggestion 2';
-              showResults(context);
-            },
-          ),
-        ],
+          );
+        },
       ),
     );
   }
