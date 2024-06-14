@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'signup.dart';
+import 'admin.dart'; // Import the admin page or widget
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -79,6 +80,30 @@ class ProfilePage extends StatelessWidget {
                 ),
                 child: Text(
                   'Signup',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AdminPage()),
+                  );
+                },
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  backgroundColor: MaterialStateProperty.all(Colors.orange),
+                ),
+                child: Text(
+                  'Admin',
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),

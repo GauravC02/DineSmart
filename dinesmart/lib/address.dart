@@ -23,141 +23,145 @@ class _AddressPageState extends State<AddressPage> {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: TextField(
-                      onChanged: (value) {
-                        name = value;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'First Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          name = value;
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'First Name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: TextField(
-                      onChanged: (value) {
-                        // Here you might want to save last name
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Last Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          // Here you might want to save last name
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Last Name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              onChanged: (value) {
-                // Here you might want to save phone number
-              },
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                onChanged: (value) {
+                  // Here you might want to save phone number
+                },
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      padding: EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            selectedDate != null
-                                ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-                                : 'Select Date',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                          Icon(Icons.calendar_today, color: Colors.blueAccent),
-                        ],
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        _selectDate(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        padding: EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedDate != null
+                                  ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
+                                  : 'Select Date',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            Icon(Icons.calendar_today,
+                                color: Colors.blueAccent),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      _selectTime(context);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      padding: EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            selectedTime != null
-                                ? '${selectedTime!.hour}:${selectedTime!.minute}'
-                                : 'Select Time',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                          Icon(Icons.access_time, color: Colors.blueAccent),
-                        ],
+                  SizedBox(width: 16.0),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        _selectTime(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        padding: EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedTime != null
+                                  ? '${selectedTime!.hour}:${selectedTime!.minute}'
+                                  : 'Select Time',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            Icon(Icons.access_time, color: Colors.blueAccent),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            GestureDetector(
-              onTap: () {
-                _navigateToMap(); // Navigate to map page to choose address
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                padding: EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      address.isNotEmpty ? address : 'Choose Address',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                    Icon(Icons.location_on, color: Colors.blueAccent),
-                  ],
+                ],
+              ),
+              SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: () {
+                  _navigateToMap(); // Navigate to map page to choose address
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  padding: EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        address.isNotEmpty ? address : 'Choose Address',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      Icon(Icons.location_on, color: Colors.blueAccent),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
