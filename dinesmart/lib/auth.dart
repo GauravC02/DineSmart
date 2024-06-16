@@ -1,3 +1,6 @@
+// auth.dart
+
+import 'package:dinesmart/Models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -42,31 +45,31 @@ class Auth {
   static Future<void> signup({
     required BuildContext context,
     required String email,
-    required String username,
+    required String firstName,
+    required String lastName,
     required String password,
     required String confirmPassword,
   }) async {
     if (email.isNotEmpty &&
-        username.isNotEmpty &&
+        firstName.isNotEmpty &&
+        lastName.isNotEmpty &&
         password.isNotEmpty &&
         confirmPassword.isNotEmpty) {
       if (password == confirmPassword) {
         final response = await http.post(
-          Uri.parse('http://192.168.1.72:9090/auth/register'),
+          Uri.parse('http://192.168.1.72:9090/user/register'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: jsonEncode(<String, String>{
-            'id': 'hello',
+            'firstName': firstName,
+            'lastName': lastName,
             'email': email,
-            // 'username': username,
             'password': password,
           }),
         );
 
         if (response.statusCode == 200) {
-          _username = username;
-
           // After successful signup, navigate to the login page
           Navigator.pushReplacementNamed(context, '/login');
         } else {

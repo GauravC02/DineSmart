@@ -12,7 +12,8 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   TextEditingController _emailController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
 
@@ -32,7 +33,7 @@ class _SignupPageState extends State<SignupPage> {
             decoration: BoxDecoration(color: Colors.black.withOpacity(0.5)),
             child: Center(
               child: Container(
-                height: 520.0,
+                height: 600.0,
                 width: 300.0,
                 padding: EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
@@ -74,8 +75,14 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       SizedBox(height: 20.0),
                       _buildTextField(
-                        label: 'Username',
-                        controller: _usernameController,
+                        label: 'First Name',
+                        controller: _firstNameController,
+                        icon: Icons.person,
+                      ),
+                      SizedBox(height: 20.0),
+                      _buildTextField(
+                        label: 'Last Name',
+                        controller: _lastNameController,
                         icon: Icons.person,
                       ),
                       SizedBox(height: 20.0),
@@ -97,7 +104,8 @@ class _SignupPageState extends State<SignupPage> {
                         onPressed: () => Auth.signup(
                           context: context,
                           email: _emailController.text,
-                          username: _usernameController.text,
+                          firstName: _firstNameController.text,
+                          lastName: _lastNameController.text,
                           password: _passwordController.text,
                           confirmPassword: _confirmPasswordController.text,
                         ),

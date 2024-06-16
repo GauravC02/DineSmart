@@ -1,5 +1,3 @@
-// restaurantdine.dart
-
 import 'package:flutter/material.dart';
 import 'restaurants.dart';
 import 'menu.dart';
@@ -51,6 +49,12 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     throw Exception('Item with ID $itemId not found.');
   }
 
+  void _addToHistory(String restaurantName, double amount) {
+    // Replace with your logic to add order to history
+    print('Adding order to history: $restaurantName - $amount');
+    // You can add actual implementation here
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
@@ -91,6 +95,8 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                                   .toList(),
                               restaurantName: widget.restaurant.name,
                               updateItemQuantity: _onQuantityChanged,
+                              addToHistory:
+                                  _addToHistory, // Pass addToHistory function
                             ),
                           ),
                         );
@@ -277,7 +283,7 @@ class MenuItemWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '\$${item.price.toStringAsFixed(2)}',
+                        '\ Nrs ${item.price.toStringAsFixed(2)}',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],

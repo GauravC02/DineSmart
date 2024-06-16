@@ -1,23 +1,26 @@
-// cart.dart
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart'; // Import Provider if you're using it for state management
 import 'theme.dart';
-import 'address.dart'; // Import AddressPage
-import 'payment.dart'; // Import PaymentPage
+import 'address.dart';
+import 'payment.dart';
+import 'dashboard.dart'; // Import the DashboardPage
+import 'history.dart'; // Import HistoryPage to navigate to it after order placement
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> items; // List of items in the cart
   final String restaurantName; // Name of the restaurant
   final Function(int, int)
       updateItemQuantity; // Function to update item quantity
+  final Function(String, double)
+      addToHistory; // Function to add order to history
 
-  CartPage(
-      {Key? key,
-      required this.items,
-      required this.restaurantName,
-      required this.updateItemQuantity})
-      : super(key: key);
+  CartPage({
+    Key? key,
+    required this.items,
+    required this.restaurantName,
+    required this.updateItemQuantity,
+    required this.addToHistory, // Ensure addToHistory is required
+  }) : super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -59,13 +62,15 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text(getAppBarTitle(),
-            style: TextStyle(
-                color: themeNotifier.currentTheme.textTheme.titleLarge?.color)),
+        title: Text(
+          getAppBarTitle(),
+          style: TextStyle(
+              color: themeNotifier.currentTheme.textTheme.titleLarge?.color),
+        ),
         backgroundColor: themeNotifier.currentTheme.appBarTheme.backgroundColor,
         elevation: 4,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60.0), // Adjust the height as needed
+          preferredSize: Size.fromHeight(60.0),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
@@ -103,7 +108,7 @@ class _CartPageState extends State<CartPage> {
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '\$${getTotalAmount().toStringAsFixed(2)}',
+                  '\ Nrs ${getTotalAmount().toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -111,10 +116,10 @@ class _CartPageState extends State<CartPage> {
           ),
           Expanded(
             child: _selectedIndex == 0
-                ? buildCartItems() // Show cart items
+                ? buildCartItems()
                 : _selectedIndex == 1
-                    ? AddressPage() // Show address page
-                    : PaymentPage(), // Show payment page
+                    ? AddressPage()
+                    : PaymentPage(),
           ),
         ],
       ),
@@ -168,7 +173,7 @@ class _CartPageState extends State<CartPage> {
                     }
                   });
                 },
-                child: Text('ClearCart'),
+                child: Text('Clear Cart'),
               ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -199,7 +204,7 @@ class _CartPageState extends State<CartPage> {
                   });
                 } else if (_selectedIndex == 2) {
                   // Handle checkout functionality
-                  // For example: _handleCheckout();
+                  _showOrderPlacedDialog(); // Show the dialog
                 }
               },
               child: Text(_selectedIndex == 2 ? 'Checkout' : 'Continue'),
@@ -287,7 +292,14 @@ class _CartPageState extends State<CartPage> {
                             ),
                           ),
                           Text(
-                            'Price: \$${item['price']}',
+                            'Price: \ Nrs ${item['price']}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          Text(
+                            'Total: \ Nrs ${(item['price'] * item['quantity']).toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.grey[700],
@@ -299,30 +311,23 @@ class _CartPageState extends State<CartPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.remove_circle_outline),
+                            icon: Icon(Icons.remove),
                             onPressed: () {
                               setState(() {
                                 if (item['quantity'] > 1) {
-                                  item['quantity']--;
-                                  // Update quantity in RestaurantProfilePage
                                   widget.updateItemQuantity(
-                                      item['id'], item['quantity']);
+                                      item['id'], item['quantity'] - 1);
                                 }
                               });
                             },
                           ),
-                          Text(
-                            '${item['quantity']}',
-                            style: TextStyle(fontSize: 18.0),
-                          ),
+                          Text(item['quantity'].toString()),
                           IconButton(
-                            icon: Icon(Icons.add_circle_outline),
+                            icon: Icon(Icons.add),
                             onPressed: () {
                               setState(() {
-                                item['quantity']++;
-                                // Update quantity in RestaurantProfilePage
                                 widget.updateItemQuantity(
-                                    item['id'], item['quantity']);
+                                    item['id'], item['quantity'] + 1);
                               });
                             },
                           ),
@@ -335,14 +340,33 @@ class _CartPageState extends State<CartPage> {
             ),
           )
         : Center(
-            child: Text(
-              'Your cart is empty!',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
-              ),
-            ),
+            child: Text('Cart is Empty'),
           );
+  }
+
+  void _showOrderPlacedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Order Placed'),
+          content: Text('Thank you for your order!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                widget.addToHistory(widget.restaurantName, getTotalAmount());
+                // Add the order to history and navigate to HistoryPage
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()),
+                  (route) => false,
+                );
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
