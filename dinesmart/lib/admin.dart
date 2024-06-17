@@ -1,5 +1,16 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'restaurants.dart'; // Import your Restaurant class and allRestaurants list
+import 'qrgenerator.dart';
+import 'Dine.dart';
+import 'package:dinesmart/Models/Location.dart'; // Import Location class
+import '../Address.dart'; // Import Address class
+import 'package:dinesmart/Models/Requests/ResturantRequest.dart'; // Import ResturantRequest class
+import './Models/Address.dart';
+import 'package:http/http.dart' as http;
+import 'Constants/Constants.dart' as con;
 
 class AdminPage extends StatefulWidget {
   @override
@@ -8,11 +19,13 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _logoController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _coverImageController = TextEditingController();
-
-  List<Restaurant> deletedRestaurants = []; // Track deleted restaurants
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _locationLatitudeController =
+      TextEditingController();
+  final TextEditingController _locationLongitudeController =
+      TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,63 +46,39 @@ class _AdminPageState extends State<AdminPage> {
               ),
               SizedBox(height: 20),
               _buildTextField(_nameController, 'Restaurant Name'),
-              _buildTextField(_logoController, 'Logo URL'),
-              _buildTextField(_locationController, 'Location'),
-              _buildTextField(_coverImageController, 'Cover Image URL'),
+              _buildAddressField(),
+              _buildLocationFields(),
+              _buildTextField(_emailController, 'Email'),
+              _buildTextField(_phoneController, 'Phone'),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  _addRestaurant(context);
+                onPressed: () async {
+                  ResturantRequest r = ResturantRequest(
+                    name: _nameController.text,
+                    address: Address(
+                      detailedPlace: _addressController.text,
+                    ),
+                    location: Location(
+                      latitude: double.parse(_locationLatitudeController.text),
+                      longitude:
+                          double.parse(_locationLongitudeController.text),
+                    ),
+                    email: _emailController.text,
+                    phone: _phoneController.text,
+                  );
+                  print(r);
+
+                  String baseUrl = con.baseUrl;
+                  final response = await http.post(
+                      Uri.parse("$baseUrl/resturant/save"),
+                      headers: <String, String>{
+                        'Content-Type': 'application/json; charset=UTF-8'
+                      },
+                      body: json.encode(r.toJson()));
+                  print(json.decode(response.body));
+                  //_addRestaurant(context);
                 },
                 child: Text('Add Restaurant'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // background color
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  textStyle: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: 30),
-              Text(
-                'All Restaurants:',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: allRestaurants.length,
-                itemBuilder: (context, index) {
-                  final restaurant = allRestaurants[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(10),
-                      title: Text(
-                        restaurant.name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(restaurant.location),
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage(restaurant.logo),
-                        radius: 30,
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _confirmDelete(context, index, restaurant.name);
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _restoreDeletedRestaurants(context);
-                },
-                child: Text('Restore Deleted Restaurants'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green, // background color
                   padding: EdgeInsets.symmetric(vertical: 15),
@@ -116,36 +105,37 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
+  Widget _buildAddressField() {
+    return _buildTextField(_addressController, 'Address');
+  }
+
+  Widget _buildLocationFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTextField(_locationLatitudeController, 'Latitude'),
+        SizedBox(height: 10),
+        _buildTextField(_locationLongitudeController, 'Longitude'),
+      ],
+    );
+  }
+
   void _addRestaurant(BuildContext context) {
     // Validate input fields
     if (_nameController.text.isEmpty ||
-        _logoController.text.isEmpty ||
-        _locationController.text.isEmpty ||
-        _coverImageController.text.isEmpty) {
+        _emailController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _locationLatitudeController.text.isEmpty ||
+        _locationLongitudeController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please fill in all fields.'),
+          content: Text('Please fill in all required fields.'),
           duration: Duration(seconds: 2),
         ),
       );
       return;
     }
-
-    final newRestaurant = Restaurant(
-      name: _nameController.text,
-      logo: _logoController.text,
-      location: _locationController.text,
-      coverImage: _coverImageController.text,
-      menu: [], // Initialize with an empty menu or predefined categories
-    );
-
-    setState(() {
-      allRestaurants.add(newRestaurant);
-      _nameController.clear();
-      _logoController.clear();
-      _locationController.clear();
-      _coverImageController.clear();
-    });
 
     // Show snack bar or toast to indicate successful addition
     ScaffoldMessenger.of(context).showSnackBar(
@@ -153,78 +143,6 @@ class _AdminPageState extends State<AdminPage> {
         content: Text('Restaurant added successfully!'),
         duration: Duration(seconds: 2),
       ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context, int index, String restaurantName) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text(
-              'Are you sure you want to delete the restaurant "$restaurantName"?'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Delete'),
-              onPressed: () {
-                setState(() {
-                  deletedRestaurants.add(allRestaurants[index]);
-                  allRestaurants.removeAt(index);
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _restoreDeletedRestaurants(BuildContext context) {
-    if (deletedRestaurants.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('No restaurants to restore.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Restore Deleted Restaurants'),
-          content:
-              Text('Are you sure you want to restore all deleted restaurants?'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Restore'),
-              onPressed: () {
-                setState(() {
-                  allRestaurants.addAll(deletedRestaurants);
-                  deletedRestaurants.clear();
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

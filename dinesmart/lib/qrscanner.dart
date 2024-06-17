@@ -21,6 +21,7 @@ class _QRScannerPageState extends State<QRScannerPage>
     with SingleTickerProviderStateMixin {
   late QRViewController controller;
   late AnimationController _animationController;
+  bool _isDialogShowing = false;
 
   @override
   void initState() {
@@ -92,8 +93,10 @@ class _QRScannerPageState extends State<QRScannerPage>
       // Check if the scanned data is a valid URL
       if (scannedUrl.isNotEmpty &&
           Uri.tryParse(scannedUrl)?.isAbsolute == true) {
-        // Open the scanned URL in the default web browser
-        launch(scannedUrl);
+        if (!_isDialogShowing) {
+          _showEmailPhoneDialog(
+              scannedUrl); // Show the dialog box to collect email and phone number
+        }
       } else {
         // Show an error message if the scanned data is not a valid URL
         showDialog(
@@ -112,6 +115,112 @@ class _QRScannerPageState extends State<QRScannerPage>
           ),
         );
       }
+    });
+  }
+
+  void _showEmailPhoneDialog(String url) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController phoneController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+    _isDialogShowing = true;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          title: Text("Enter Details"),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        hintText: "Enter your email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        final validEmailRegex = RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|yahoo\.com)$');
+                        if (!validEmailRegex.hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: TextFormField(
+                      controller: phoneController,
+                      maxLength: 10, // Restrict input to 10 characters
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        hintText: "Enter your phone number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your number';
+                        }
+                        if (value.length != 10 ||
+                            !RegExp(r'^\d{10}$').hasMatch(value)) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red, // Set the text color
+              ),
+              onPressed: () {
+                _isDialogShowing = false;
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.green, // Set the text color
+              ),
+              onPressed: () {
+                if (_formKey.currentState?.validate() == true) {
+                  _isDialogShowing = false;
+                  Navigator.pop(context);
+                  launch(url);
+                }
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        );
+      },
+    ).then((_) {
+      _isDialogShowing = false;
     });
   }
 }

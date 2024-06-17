@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dinesmart/Models/New_Restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
@@ -8,6 +11,8 @@ import 'bottomnavigationbar.dart';
 import 'theme.dart';
 import 'profile.dart'; // Import the ProfilePage
 import 'categories.dart'; // Import the categories.dart file
+import 'package:http/http.dart' as http;
+import 'Constants/Constants.dart' as con;
 
 class DashboardContent extends StatelessWidget {
   @override
@@ -23,11 +28,36 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
+  List<New_Resturant> resturants = [];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchResturants();
+  }
+
+  void _fetchResturants() async {
+    String baseUrl = con.baseUrl;
+    final response = await http.get(Uri.parse('$baseUrl/resturant/all'));
+    if (response.statusCode == 200) {
+      final List<dynamic> restaurantJson = json.decode(response.body);
+      print(restaurantJson);
+      setState(() {
+        resturants =
+            restaurantJson.map((json) => New_Resturant.fromJson(json)).toList();
+      });
+
+      //print(resturants);
+    } else {
+      // Handle the error
+      throw Exception('Failed to load restaurants');
+    }
   }
 
   @override
